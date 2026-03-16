@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: bookease-pro-frontend
+    env: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://bookeasemulti.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
