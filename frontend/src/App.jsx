@@ -16,8 +16,8 @@ import AdminAppointments from './pages/admin/AdminAppointments';
 
 import StaffDashboard from './pages/staff/StaffDashboard';
 
-import BusinessList   from './pages/public/BusinessList';
-import BusinessDetail from './pages/public/BusinessDetail';
+import BusinessList   from './pages/public/BusinessList.jsx';
+import BusinessDetail from './pages/public/BusinessDetail.jsx';
 import MyAppointments from './pages/customer/MyAppointments';
 
 const roleMap = { SUPER_ADMIN: '/super-admin/dashboard', ADMIN: '/admin/dashboard', STAFF: '/staff/dashboard', CUSTOMER: '/businesses' };
