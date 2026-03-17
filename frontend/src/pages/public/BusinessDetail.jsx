@@ -26,10 +26,40 @@ const BusinessDetail = () => {
   const [confirmed, setConfirmed] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [slotAvailability, setSlotAvailability] = useState({ availableSlots: [], bookedSlots: [], allSlots: [] });
+  const [loadingSlots, setLoadingSlots] = useState(false);
 
   useEffect(() => {
     businessAPI.getById(id).then(r => setBusiness(r.data)).catch(console.error).finally(() => setLoading(false));
   }, [id]);
+
+  useEffect(() => {
+    if (selected.date && selected.staff && selected.service) {
+      fetchSlotAvailability();
+    } else {
+      setSlotAvailability({ availableSlots: [], bookedSlots: [], allSlots: [] });
+    }
+  }, [selected.date, selected.staff?.id, selected.service?.id]);
+
+  const fetchSlotAvailability = async () => {
+    if (!selected.date || !selected.staff?.id || !selected.service?.id) return;
+    
+    setLoadingSlots(true);
+    try {
+      const response = await appointmentsAPI.getAvailableSlots({
+        business_id: id,
+        staff_id: selected.staff.id,
+        service_id: selected.service.id,
+        date: selected.date
+      });
+      setSlotAvailability(response.data);
+    } catch (err) {
+      console.error('Error fetching slot availability:', err);
+      setSlotAvailability({ availableSlots: [], bookedSlots: [], allSlots: TIME_SLOTS });
+    } finally {
+      setLoadingSlots(false);
+    }
+  };
 
   const handleConfirm = async () => {
     if (!user) return navigate('/login');
@@ -177,14 +207,35 @@ const BusinessDetail = () => {
             {selected.date && (
               <div className="card">
                 <label className="label mb-3">Available Times</label>
-                <div className="grid grid-cols-4 gap-2">
-                  {TIME_SLOTS.map(t => (
-                    <button key={t} onClick={() => setSelected({ ...selected, time: t })}
-                      className={'py-2 px-3 rounded-lg text-sm font-medium border-2 transition-all ' + (selected.time === t ? 'border-primary-600 bg-primary-600 text-white' : 'border-slate-200 hover:border-primary-400 text-slate-700')}>
-                      {t}
-                    </button>
-                  ))}
-                </div>
+                {loadingSlots ? (
+                  <div className="text-slate-400 text-sm">Loading available slots...</div>
+                ) : (
+                  <div className="grid grid-cols-4 gap-2">
+                    {slotAvailability.allSlots.map(t => {
+                      const isBooked = slotAvailability.bookedSlots.includes(t);
+                      const isSelected = selected.time === t;
+                      
+                      return (
+                        <button
+                          key={t}
+                          onClick={() => !isBooked && setSelected({ ...selected, time: t })}
+                          disabled={isBooked}
+                          className={
+                            'py-2 px-3 rounded-lg text-sm font-medium border-2 transition-all ' +
+                            (isBooked 
+                              ? 'border-red-200 bg-red-50 text-red-500 cursor-not-allowed opacity-60' 
+                              : isSelected 
+                                ? 'border-primary-600 bg-primary-600 text-white' 
+                                : 'border-slate-200 hover:border-primary-400 text-slate-700'
+                            )
+                          }
+                        >
+                          {isBooked ? 'Booked' : t}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             )}
             <div className="flex gap-3 mt-4">

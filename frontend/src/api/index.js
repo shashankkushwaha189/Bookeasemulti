@@ -59,6 +59,7 @@ export const appointmentsAPI = {
   getAll:     ()         => api.get('/appointments/all'),
   getBusiness:()         => api.get('/appointments/business'),
   getMy:      ()         => api.get('/appointments/my'),
+  getAvailableSlots: (params) => api.get('/appointments/available-slots', { params }),
   create:     (data)     => api.post('/appointments', data),
   update:     (id, data) => api.put('/appointments/' + id, data),
 };

@@ -50,12 +50,30 @@ const createAppointment = async (req, res) => {
     const { business_id, service_id, staff_id, appointment_date, appointment_time, notes } = req.body;
     if (!business_id || !service_id || !staff_id || !appointment_date || !appointment_time)
       return res.status(400).json({ message: 'All fields are required.' });
+    
     const customer = await Customer.findOne({ where: { user_id: req.user.id } });
     if (!customer) return res.status(404).json({ message: 'Customer profile not found.' });
+    
     const service = await Service.findOne({ where: { id: service_id, business_id } });
     if (!service) return res.status(400).json({ message: 'Invalid service for this business.' });
+    
     const staff = await Staff.findOne({ where: { id: staff_id, business_id } });
     if (!staff) return res.status(400).json({ message: 'Invalid staff for this business.' });
+
+    const existingAppointment = await Appointment.findOne({
+      where: {
+        business_id,
+        staff_id,
+        appointment_date,
+        appointment_time,
+        status: 'BOOKED'
+      }
+    });
+
+    if (existingAppointment) {
+      return res.status(409).json({ message: 'This time slot is already booked.' });
+    }
+
     const appointment = await Appointment.create({
       business_id, service_id, staff_id, customer_id: customer.id,
       appointment_date, appointment_time, notes, status: 'BOOKED',
@@ -90,4 +108,42 @@ const getAllAppointments = async (req, res) => {
   } catch { return res.status(500).json({ message: 'Server error.' }); }
 };
 
-module.exports = { getBusinessAppointments, getStaffAppointments, getMyAppointments, createAppointment, updateAppointment, getAllAppointments };
+const getAvailableSlots = async (req, res) => {
+  try {
+    const { business_id, staff_id, service_id, date } = req.query;
+    if (!business_id || !staff_id || !service_id || !date)
+      return res.status(400).json({ message: 'All parameters are required.' });
+
+    const service = await Service.findOne({ where: { id: service_id, business_id } });
+    if (!service) return res.status(400).json({ message: 'Invalid service for this business.' });
+
+    const staff = await Staff.findOne({ where: { id: staff_id, business_id } });
+    if (!staff) return res.status(400).json({ message: 'Invalid staff for this business.' });
+
+    const existingAppointments = await Appointment.findAll({
+      where: {
+        business_id,
+        staff_id,
+        appointment_date: date,
+        status: 'BOOKED'
+      },
+      attributes: ['appointment_time']
+    });
+
+    const bookedTimes = existingAppointments.map(apt => apt.appointment_time.slice(0, 5));
+    
+    const TIME_SLOTS = ['09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'];
+    const availableSlots = TIME_SLOTS.filter(slot => !bookedTimes.includes(slot));
+
+    return res.status(200).json({ 
+      availableSlots, 
+      bookedSlots: bookedTimes,
+      allSlots: TIME_SLOTS 
+    });
+  } catch (err) { 
+    console.error(err); 
+    return res.status(500).json({ message: 'Server error.' }); 
+  }
+};
+
+module.exports = { getBusinessAppointments, getStaffAppointments, getMyAppointments, createAppointment, updateAppointment, getAllAppointments, getAvailableSlots };
