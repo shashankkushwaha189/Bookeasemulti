@@ -60,7 +60,7 @@ const Layout = ({ children }) => {
 
       <aside className={`w-64 bg-white border-r border-slate-200 flex flex-col fixed h-full z-50 transform transition-transform duration-300 ease-in-out ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      } w-64 translate-x-0 sm:translate-x-0`}>
+      } -translate-x-full sm:translate-x-0`}>
         <div className="p-6 xs:p-4 border-b border-slate-100">
           <div className="flex items-center gap-3 xs:gap-2">
             <div className="w-9 h-9 xs:w-8 xs:h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold text-lg xs:text-sm">B</div>
@@ -101,7 +101,9 @@ const Layout = ({ children }) => {
           </div>
         )}
       </aside>
-      <main className="flex-1 ml-64 sm:ml-64 xs:ml-0 p-8 xs:p-4 xs:pt-16 w-full max-w-full overflow-x-hidden min-h-screen">{children}</main>
+      <main className={`flex-1 p-8 xs:p-4 xs:pt-16 w-full max-w-full overflow-x-hidden min-h-screen transition-all duration-300 ${
+        sidebarOpen ? 'ml-64 sm:ml-64' : 'ml-0 sm:ml-64'
+      }`}>{children}</main>
     </div>
   );
 };
