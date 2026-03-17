@@ -24,30 +24,30 @@ const BusinessList = () => {
 
   return (
     <Layout>
-      <div className="mb-6">
+      <div className="mb-4 xs:mb-3">
         <h1 className="page-title">Find & Book</h1>
         <p className="page-subtitle">Browse businesses and book appointments instantly</p>
       </div>
 
-      <input className="input max-w-md mb-4" placeholder="Search businesses, speciality…" value={search} onChange={e => setSearch(e.target.value)} />
+      <input className="input max-w-md mb-4 xs:max-w-full xs:mb-3" placeholder="Search businesses, speciality…" value={search} onChange={e => setSearch(e.target.value)} />
 
       {/* Category filter */}
-      <div className="flex gap-2 mb-6 flex-wrap">
-        <button className={'btn text-sm py-1.5 px-3 ' + (catFilter === 'All' ? 'btn-primary' : 'btn-secondary')} onClick={() => setCatFilter('All')}>🏢 All</button>
+      <div className="flex gap-2 mb-6 xs:mb-4 flex-wrap">
+        <button className={'btn text-sm py-1.5 px-3 xs:py-1 xs:px-2 xs:text-xs ' + (catFilter === 'All' ? 'btn-primary' : 'btn-secondary')} onClick={() => setCatFilter('All')}>🏢 All</button>
         {CATEGORIES.map(cat => (
-          <button key={cat.value} className={'btn text-sm py-1.5 px-3 ' + (catFilter === cat.value ? 'btn-primary' : 'btn-secondary')} onClick={() => setCatFilter(cat.value)}>
-            {cat.icon} {cat.label}
+          <button key={cat.value} className={'btn text-sm py-1.5 px-3 xs:py-1 xs:px-2 xs:text-xs ' + (catFilter === cat.value ? 'btn-primary' : 'btn-secondary')} onClick={() => setCatFilter(cat.value)}>
+            <span className="xs:hidden">{cat.icon} </span>{cat.label}
           </button>
         ))}
       </div>
 
-      {loading ? <div className="text-slate-400 text-sm">Loading…</div> :
-        filtered.length === 0 ? <div className="text-center py-16 text-slate-400">No businesses found.</div> : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+      {loading ? <div className="text-slate-400 text-sm xs:text-xs text-center py-8">Loading…</div> :
+        filtered.length === 0 ? <div className="text-center py-16 xs:py-8 text-slate-400 xs:text-xs">No businesses found.</div> : (
+          <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 xs:gap-3">
             {filtered.map(b => (
-              <div key={b.id} className="card hover:shadow-md transition-shadow cursor-pointer group" onClick={() => navigate('/businesses/' + b.id)}>
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center text-2xl flex-shrink-0">
+              <div key={b.id} className="card hover:shadow-md transition-shadow cursor-pointer group xs:p-4" onClick={() => navigate('/businesses/' + b.id)}>
+                <div className="flex items-start gap-4 xs:gap-3">
+                  <div className="w-12 h-12 xs:w-10 xs:h-10 rounded-xl bg-primary-100 flex items-center justify-center text-2xl xs:text-lg flex-shrink-0">
                     {getCategoryIcon(b.category)}
                   </div>
                   <div className="flex-1 min-w-0">
