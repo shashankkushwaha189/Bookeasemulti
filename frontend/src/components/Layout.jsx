@@ -101,7 +101,7 @@ const Layout = ({ children }) => {
           </div>
         )}
       </aside>
-      <main className="flex-1 ml-64 xs:ml-0 p-8 xs:p-4 xs:pt-16">{children}</main>
+      <main className="flex-1 ml-64 xs:ml-0 p-8 xs:p-4 xs:pt-16 w-full max-w-full overflow-x-hidden">{children}</main>
     </div>
   );
 };
