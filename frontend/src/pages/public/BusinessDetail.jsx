@@ -9,9 +9,9 @@ const STEPS = ['Select Service', 'Select Staff', 'Pick Date & Time', 'Confirm'];
 const TIME_SLOTS = ['09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'];
 
 const Row = ({ label, value }) => (
-  <div className="flex justify-between py-1 border-b border-slate-50 last:border-0">
-    <span className="text-sm text-slate-500">{label}</span>
-    <span className="text-sm font-medium text-slate-900">{value}</span>
+  <div className="flex justify-between py-2 xs:py-1.5 border-b border-slate-50 last:border-0">
+    <span className="text-sm text-slate-500 xs:text-xs">{label}</span>
+    <span className="text-sm font-medium text-slate-900 xs:text-xs">{value}</span>
   </div>
 );
 
@@ -62,11 +62,11 @@ const BusinessDetail = () => {
   if (step === 4 && confirmed) {
     return (
       <Layout>
-        <div className="max-w-lg mx-auto text-center">
-          <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">✓</div>
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">Appointment Confirmed!</h1>
-          <p className="text-slate-500 mb-8">Booked at <strong>{business.name}</strong></p>
-          <div className="card text-left mb-8">
+        <div className="max-w-lg mx-auto text-center px-4 xs:px-2">
+          <div className="w-20 h-20 xs:w-16 xs:h-16 bg-emerald-100 rounded-full flex items-center justify-center text-4xl xs:text-3xl mx-auto mb-6 xs:mb-4">✓</div>
+          <h1 className="text-2xl xs:text-xl font-bold text-slate-900 mb-2">Appointment Confirmed!</h1>
+          <p className="text-slate-500 xs:text-sm mb-8 xs:mb-6">Booked at <strong>{business.name}</strong></p>
+          <div className="card text-left mb-8 xs:mb-6">
             <Row label="Business"      value={business.name} />
             <Row label={serviceLabel}  value={confirmed.service?.name} />
             <Row label={staffLabel}    value={confirmed.staff?.name} />
@@ -74,7 +74,7 @@ const BusinessDetail = () => {
             <Row label="Time"          value={confirmed.appointment_time?.slice(0,5)} />
             <Row label="Price"         value={currency + parseFloat(confirmed.service?.price || 0).toFixed(2)} />
           </div>
-          <div className="flex gap-3 justify-center">
+          <div className="flex gap-3 justify-center flex-col xs:flex-row">
             <button className="btn-primary" onClick={reset}>Book Another</button>
             <button className="btn-secondary" onClick={() => navigate('/my-appointments')}>My Appointments</button>
           </div>
@@ -85,26 +85,26 @@ const BusinessDetail = () => {
 
   return (
     <Layout>
-      <button className="text-sm text-primary-600 hover:underline mb-4" onClick={() => navigate('/businesses')}>← Back to Businesses</button>
+      <button className="text-sm text-primary-600 hover:underline mb-4 xs:mb-3" onClick={() => navigate('/businesses')}>← Back to Businesses</button>
 
       {/* Business info */}
-      <div className="card mb-6">
-        <div className="flex items-start gap-4">
-          <div className="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center text-4xl">{catIcon}</div>
+      <div className="card mb-6 xs:mb-4">
+        <div className="flex items-start gap-4 xs:gap-3">
+          <div className="w-16 h-16 xs:w-12 xs:h-12 bg-primary-100 rounded-2xl flex items-center justify-center text-4xl xs:text-2xl">{catIcon}</div>
           <div className="flex-1">
             <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-2xl font-bold text-slate-900">{business.name}</h1>
-              <span className="text-xs bg-primary-100 text-primary-700 px-2.5 py-1 rounded-full font-medium">{business.category}</span>
+              <h1 className="text-2xl xs:text-lg font-bold text-slate-900">{business.name}</h1>
+              <span className="text-xs bg-primary-100 text-primary-700 px-2.5 py-1 xs:px-2 xs:py-0.5 rounded-full font-medium">{business.category}</span>
             </div>
-            {business.speciality && <p className="text-primary-600 font-medium text-sm mt-0.5">{business.speciality}</p>}
-            {business.address && <p className="text-slate-500 text-sm mt-1">📍 {business.address}</p>}
-            {business.phone && <p className="text-slate-500 text-sm">📞 {business.phone}</p>}
-            {business.description && <p className="text-slate-600 text-sm mt-2">{business.description}</p>}
+            {business.speciality && <p className="text-primary-600 font-medium text-sm xs:text-xs mt-0.5">{business.speciality}</p>}
+            {business.address && <p className="text-slate-500 text-sm xs:text-xs mt-1">📍 {business.address}</p>}
+            {business.phone && <p className="text-slate-500 text-sm xs:text-xs">📞 {business.phone}</p>}
+            {business.description && <p className="text-slate-600 text-sm xs:text-xs mt-2">{business.description}</p>}
           </div>
         </div>
       </div>
 
-      <h2 className="text-lg font-semibold text-slate-800 mb-4">Book an Appointment</h2>
+      <h2 className="text-lg xs:text-base font-semibold text-slate-800 mb-4 xs:mb-3">Book an Appointment</h2>
 
       {/* Stepper */}
       <div className="flex items-center mb-6 flex-wrap gap-y-2">

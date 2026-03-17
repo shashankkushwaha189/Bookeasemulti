@@ -32,20 +32,20 @@ const MyAppointments = () => {
 
   return (
     <Layout>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex items-center justify-between flex-col xs:flex-row gap-4 xs:gap-0">
         <div><h1 className="page-title">My Appointments</h1><p className="page-subtitle">All your bookings across businesses</p></div>
         <button className="btn-primary" onClick={() => navigate('/businesses')}>+ Book New</button>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="card text-center"><p className="text-2xl font-bold text-slate-900">{appointments.length}</p><p className="text-xs text-slate-500 mt-1">Total</p></div>
-        <div className="card text-center"><p className="text-2xl font-bold text-primary-600">{appointments.filter(a => a.appointment_date >= today && a.status === 'BOOKED').length}</p><p className="text-xs text-slate-500 mt-1">Upcoming</p></div>
-        <div className="card text-center"><p className="text-2xl font-bold text-emerald-600">{appointments.filter(a => a.status === 'COMPLETED').length}</p><p className="text-xs text-slate-500 mt-1">Completed</p></div>
+      <div className="grid grid-cols-1 xs:grid-cols-3 gap-4 mb-6">
+        <div className="card text-center"><p className="text-2xl xs:text-xl font-bold text-slate-900">{appointments.length}</p><p className="text-xs text-slate-500 mt-1">Total</p></div>
+        <div className="card text-center"><p className="text-2xl xs:text-xl font-bold text-primary-600">{appointments.filter(a => a.appointment_date >= today && a.status === 'BOOKED').length}</p><p className="text-xs text-slate-500 mt-1">Upcoming</p></div>
+        <div className="card text-center"><p className="text-2xl xs:text-xl font-bold text-emerald-600">{appointments.filter(a => a.status === 'COMPLETED').length}</p><p className="text-xs text-slate-500 mt-1">Completed</p></div>
       </div>
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-4 flex-wrap">
         {['all','upcoming','history'].map(f => (
-          <button key={f} className={'btn text-sm py-1.5 px-4 capitalize ' + (filter === f ? 'btn-primary' : 'btn-secondary')} onClick={() => setFilter(f)}>{f}</button>
+          <button key={f} className={'btn text-sm py-1.5 px-4 xs:px-3 xs:text-xs capitalize ' + (filter === f ? 'btn-primary' : 'btn-secondary')} onClick={() => setFilter(f)}>{f}</button>
         ))}
       </div>
 
