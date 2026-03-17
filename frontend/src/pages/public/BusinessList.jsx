@@ -24,17 +24,17 @@ const BusinessList = () => {
 
   return (
     <Layout>
-      <div className="mb-4 xs:mb-3 w-full max-w-full">
+      <div className="mb-4 xs:mb-3 w-full max-w-full px-4 xs:px-2">
         <h1 className="page-title">Find & Book</h1>
         <p className="page-subtitle">Browse businesses and book appointments instantly</p>
       </div>
 
-      <div className="w-full max-w-full mb-4 xs:mb-3">
+      <div className="w-full max-w-full px-4 xs:px-2 mb-4 xs:mb-3">
         <input className="input w-full max-w-full" placeholder="Search businesses, speciality…" value={search} onChange={e => setSearch(e.target.value)} />
       </div>
 
       {/* Category filter */}
-      <div className="flex gap-2 mb-6 xs:mb-4 flex-wrap w-full max-w-full overflow-x-hidden">
+      <div className="flex gap-2 mb-6 xs:mb-4 flex-wrap w-full max-w-full overflow-x-hidden px-4 xs:px-2">
         <button className={'btn text-sm py-1.5 px-3 xs:py-1 xs:px-2 xs:text-xs flex-shrink-0 ' + (catFilter === 'All' ? 'btn-primary' : 'btn-secondary')} onClick={() => setCatFilter('All')}>🏢 All</button>
         {CATEGORIES.map(cat => (
           <button key={cat.value} className={'btn text-sm py-1.5 px-3 xs:py-1 xs:px-2 xs:text-xs flex-shrink-0 min-w-0 ' + (catFilter === cat.value ? 'btn-primary' : 'btn-secondary')} onClick={() => setCatFilter(cat.value)}>
@@ -43,9 +43,9 @@ const BusinessList = () => {
         ))}
       </div>
 
-      {loading ? <div className="text-slate-400 text-sm xs:text-xs text-center py-8 w-full">Loading…</div> :
-        filtered.length === 0 ? <div className="text-center py-16 xs:py-8 text-slate-400 xs:text-xs w-full">No businesses found.</div> : (
-          <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 xs:gap-3 w-full max-w-full">
+      {loading ? <div className="text-slate-400 text-sm xs:text-xs text-center py-8 w-full px-4 xs:px-2">Loading…</div> :
+        filtered.length === 0 ? <div className="text-center py-16 xs:py-8 text-slate-400 xs:text-xs w-full px-4 xs:px-2">No businesses found.</div> : (
+          <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 xs:gap-3 w-full max-w-full px-4 xs:px-2">
             {filtered.map(b => (
               <div key={b.id} className="card hover:shadow-md transition-shadow cursor-pointer group xs:p-4 w-full max-w-full overflow-hidden" onClick={() => navigate('/businesses/' + b.id)}>
                 <div className="flex items-start gap-4 xs:gap-3">
