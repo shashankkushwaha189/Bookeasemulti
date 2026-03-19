@@ -26,11 +26,10 @@ const SuperAdminUsers = () => {
     return matchSearch && matchRole;
   });
 
-  const openEditModal = (user) => {
+  const openEdit = (user) => {
     setEditingUser(user);
     setEditForm({ 
       email: user.email, 
-      password: '', 
       role: user.role 
     });
     setError('');
@@ -40,7 +39,7 @@ const SuperAdminUsers = () => {
   const closeEditModal = () => {
     setEditModal(false);
     setEditingUser(null);
-    setEditForm({ email: '', password: '', role: '' });
+    setEditForm({ email: '', role: '' });
     setError('');
   };
 
@@ -52,7 +51,6 @@ const SuperAdminUsers = () => {
     try {
       const updateData = {};
       if (editForm.email !== editingUser.email) updateData.email = editForm.email;
-      if (editForm.password) updateData.password = editForm.password;
       if (editForm.role !== editingUser.role) updateData.role = editForm.role;
       
       const updated = await superAdminAPI.updateUser(editingUser.id, updateData);
@@ -146,11 +144,11 @@ const SuperAdminUsers = () => {
               <option value="STAFF">Staff</option>
               <option value="CUSTOMER">Customer</option>
             </select>
-            {editingUser?.role === 'SUPER_ADMIN' && (
+          </div>
+        </form>
+        {editingUser?.role === 'SUPER_ADMIN' && (
               <p className="text-xs text-amber-600 mt-1">Super Admin role cannot be changed</p>
             )}
-          </div>
-          
           <div className="flex gap-3 pt-2">
             <button type="submit" className="btn-primary flex-1" disabled={saving}>
               {saving ? 'Updating…' : 'Update User'}
