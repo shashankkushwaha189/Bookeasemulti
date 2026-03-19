@@ -48,9 +48,9 @@ const SuperAdminBusinesses = () => {
 
   return (
     <Layout>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex items-center justify-between xs:ml-20 xs:mt-4">
         <div><h1 className="page-title">Businesses</h1><p className="page-subtitle">Manage all businesses in the system</p></div>
-        <button className="btn-primary" onClick={openAdd}>+ Add Business</button>
+        <button className="btn-primary xs:mr-4" onClick={openAdd}>+ Add Business</button>
       </div>
 
       {/* Category filter */}

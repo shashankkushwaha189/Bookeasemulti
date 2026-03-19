@@ -28,7 +28,7 @@ const StaffDashboard = () => {
 
   return (
     <Layout>
-      <div className="mb-6">
+      <div className="mb-6 xs:ml-20 xs:mt-4">
         <h1 className="page-title">My Schedule</h1>
         <p className="page-subtitle">{today ? new Date(today + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : ''}</p>
       </div>

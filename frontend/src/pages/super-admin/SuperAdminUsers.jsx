@@ -67,7 +67,7 @@ const SuperAdminUsers = () => {
 
   return (
     <Layout>
-      <div className="mb-6"><h1 className="page-title">All Users</h1><p className="page-subtitle">System-wide user accounts</p></div>
+      <div className="mb-6 xs:ml-20 xs:mt-4"><h1 className="page-title">All Users</h1><p className="page-subtitle">System-wide user accounts</p></div>
       <div className="flex gap-3 mb-5 flex-wrap">
         <input className="input max-w-xs" placeholder="Search by email…" value={search} onChange={e => setSearch(e.target.value)} />
         <div className="flex gap-2 flex-wrap">

@@ -24,7 +24,7 @@ const BusinessList = () => {
 
   return (
     <Layout>
-      <div className="mb-4 xs:mb-3 w-full max-w-full px-4 xs:px-2">
+      <div className="mb-4 xs:mb-3 w-full max-w-full px-4 xs:px-2 xs:ml-20 xs:mt-4">
         <h1 className="page-title">Find & Book</h1>
         <p className="page-subtitle">Browse businesses and book appointments instantly</p>
       </div>

@@ -20,7 +20,7 @@ const SuperAdminDashboard = () => {
 
   return (
     <Layout>
-      <div className="mb-6"><h1 className="page-title">Super Admin Dashboard</h1><p className="page-subtitle">System-wide overview across all businesses</p></div>
+      <div className="mb-6 xs:ml-20 xs:mt-4"><h1 className="page-title">Super Admin Dashboard</h1><p className="page-subtitle">System-wide overview across all businesses</p></div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard label="Total Businesses"   value={stats?.businesses  || 0} icon="🏢" color="blue" />

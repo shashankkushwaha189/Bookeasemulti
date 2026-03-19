@@ -27,7 +27,11 @@ const AdminDashboard = () => {
 
   return (
     <Layout>
-      <div className="mb-6">
+      <div className="mb-6 xs:ml-20 xs:mt-4">
+        <h1 className="page-title">Admin Dashboard</h1>
+        <p className="page-subtitle">Manage your business operations</p>
+      </div>
+      <div className="mb-6 xs:ml-20 xs:mt-4">
         <div className="flex items-center gap-3">
           <span className="text-3xl">{catIcon}</span>
           <div>

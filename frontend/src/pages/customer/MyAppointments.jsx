@@ -32,9 +32,9 @@ const MyAppointments = () => {
 
   return (
     <Layout>
-      <div className="mb-6 flex items-center justify-between flex-col xs:flex-row gap-4 xs:gap-0">
+      <div className="mb-6 flex items-center justify-between flex-col xs:flex-row gap-4 xs:gap-0 xs:ml-20 xs:mt-4">
         <div><h1 className="page-title">My Appointments</h1><p className="page-subtitle">All your bookings across businesses</p></div>
-        <button className="btn-primary" onClick={() => navigate('/businesses')}>+ Book New</button>
+        <button className="btn-primary xs:mr-4" onClick={() => navigate('/businesses')}>+ Book New</button>
       </div>
 
       <div className="grid grid-cols-1 xs:grid-cols-3 gap-4 mb-6">

@@ -23,7 +23,7 @@ const AdminAppointments = () => {
 
   return (
     <Layout>
-      <div className="mb-6"><h1 className="page-title">Appointments</h1><p className="page-subtitle">All appointments at your business</p></div>
+      <div className="mb-6 xs:ml-20 xs:mt-4"><h1 className="page-title">Appointments</h1><p className="page-subtitle">All appointments at your business</p></div>
 
       <div className="grid grid-cols-4 gap-4 mb-6">
         <div className="card text-center"><p className="text-2xl font-bold text-slate-900">{appointments.length}</p><p className="text-xs text-slate-500 mt-1">Total</p></div>
