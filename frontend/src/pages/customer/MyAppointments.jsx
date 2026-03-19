@@ -51,31 +51,41 @@ const MyAppointments = () => {
 
       {loading ? <div className="text-slate-400 text-sm">Loading…</div> : (
         <div className="table-wrapper">
-          <table className="table">
-            <thead><tr><th>Business</th><th>Category</th><th>Service</th><th>Staff</th><th>Date</th><th>Time</th><th>Price</th><th>Status</th><th></th></tr></thead>
-            <tbody>
-              {displayed.length === 0 ? (
-                <tr><td colSpan={9} className="text-center text-slate-400 py-8">No appointments found. <button className="text-primary-600 hover:underline" onClick={() => navigate('/businesses')}>Book one →</button></td></tr>
-              ) : displayed.map(a => (
-                <tr key={a.id}>
-                  <td className="font-medium">
-                    <div className="flex items-center gap-2">
-                      <span>{getCategoryIcon(a.business?.category)}</span>
-                      <span>{a.business?.name || '—'}</span>
-                    </div>
-                  </td>
-                  <td><span className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{a.business?.category || '—'}</span></td>
-                  <td>{a.service?.name || '—'}</td>
-                  <td><p className="font-medium">{a.staff?.name || '—'}</p><p className="text-xs text-slate-400">{a.staff?.specialization || ''}</p></td>
-                  <td>{a.appointment_date}</td>
-                  <td>{a.appointment_time?.slice(0,5)}</td>
-                  <td>{a.business?.currency || '₹'}{parseFloat(a.service?.price || 0).toFixed(2)}</td>
-                  <td><StatusBadge status={a.status} /></td>
-                  <td>{a.status === 'BOOKED' && a.appointment_date >= today && <button className="btn-danger text-xs py-1 px-2" onClick={() => handleCancel(a.id)}>Cancel</button>}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {displayed.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <p className="text-slate-600 font-medium mb-2">No appointments found</p>
+              <button className="btn-primary text-sm py-2 px-4" onClick={() => navigate('/businesses')}>Book Your First Appointment →</button>
+            </div>
+          ) : (
+            <table className="table">
+              <thead><tr><th>Business</th><th>Category</th><th>Service</th><th>Staff</th><th>Date</th><th>Time</th><th>Price</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+                {displayed.map(a => (
+                  <tr key={a.id}>
+                    <td className="font-medium">
+                      <div className="flex items-center gap-2">
+                        <span>{getCategoryIcon(a.business?.category)}</span>
+                        <span>{a.business?.name || '—'}</span>
+                      </div>
+                    </td>
+                    <td><span className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{a.business?.category || '—'}</span></td>
+                    <td>{a.service?.name || '—'}</td>
+                    <td><p className="font-medium">{a.staff?.name || '—'}</p><p className="text-xs text-slate-400">{a.staff?.specialization || ''}</p></td>
+                    <td>{a.appointment_date}</td>
+                    <td>{a.appointment_time?.slice(0,5)}</td>
+                    <td>{a.business?.currency || '₹'}{parseFloat(a.service?.price || 0).toFixed(2)}</td>
+                    <td><StatusBadge status={a.status} /></td>
+                    <td>{a.status === 'BOOKED' && a.appointment_date >= today && <button className="btn-danger text-xs py-1 px-2" onClick={() => handleCancel(a.id)}>Cancel</button>}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       )}
     </Layout>

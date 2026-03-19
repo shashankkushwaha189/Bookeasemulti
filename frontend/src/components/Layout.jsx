@@ -52,7 +52,9 @@ const Layout = ({ children }) => {
       {/* Mobile menu button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed top-3 left-3 z-50 p-1.5 bg-white rounded-lg shadow-md border border-slate-200 flex sm:hidden"
+        className={`fixed top-3 left-3 z-50 p-1.5 bg-white rounded-lg shadow-md border border-slate-200 flex sm:hidden transition-opacity duration-300 ${
+          sidebarOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
         style={{ zIndex: 60 }}
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,9 +62,9 @@ const Layout = ({ children }) => {
         </svg>
       </button>
 
-      <aside className={`w-64 bg-white border-r border-slate-200 flex flex-col fixed h-full z-50 transform transition-transform duration-300 ease-in-out ${
+      <aside className={`w-64 bg-white border-r border-slate-200 flex flex-col fixed sm:relative h-full sm:h-auto transform transition-transform duration-300 ease-in-out ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      } -translate-x-full sm:translate-x-0`} style={{ zIndex: 55 }}>
+      } sm:translate-x-0`} style={{ zIndex: 55 }}>
         <div className="p-6 xs:p-4 border-b border-slate-100">
           <div className="flex items-center gap-3 xs:gap-2">
             <div className="w-9 h-9 xs:w-8 xs:h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold text-lg xs:text-sm">B</div>
@@ -103,7 +105,7 @@ const Layout = ({ children }) => {
           </div>
         )}
       </aside>
-      <main className={`flex-1 p-8 xs:p-4 xs:pt-20 w-full max-w-full overflow-x-hidden min-h-screen transition-all duration-300 ${
+      <main className={`flex-1 p-4 xs:p-3 pt-16 xs:pt-14 w-full overflow-y-auto transition-all duration-300 ${
         sidebarOpen ? 'ml-64 sm:ml-64' : 'ml-0 sm:ml-64'
       }`}>{children}</main>
     </div>

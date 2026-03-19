@@ -221,7 +221,7 @@ const BusinessDetail = () => {
                           onClick={() => !isBooked && setSelected({ ...selected, time: t })}
                           disabled={isBooked}
                           className={
-                            'py-2 px-3 rounded-lg text-sm font-medium border-2 transition-all ' +
+                            'py-2 px-3 rounded-lg text-sm font-medium border-2 transition-all flex items-center justify-center ' +
                             (isBooked 
                               ? 'border-red-200 bg-red-50 text-red-500 cursor-not-allowed opacity-60' 
                               : isSelected 
