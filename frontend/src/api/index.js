@@ -67,6 +67,7 @@ export const appointmentsAPI = {
 export const superAdminAPI = {
   getStats: () => api.get('/super-admin/stats'),
   getUsers: () => api.get('/super-admin/users'),
+  updateUser: (id, data) => api.put('/super-admin/users/' + id, data),
 };
 
 export default api;
