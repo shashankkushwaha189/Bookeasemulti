@@ -160,6 +160,5 @@ const SuperAdminUsers = () => {
         </form>
       </Modal>
     </Layout>
-  );
-};
+  )};
 export default SuperAdminUsers;
