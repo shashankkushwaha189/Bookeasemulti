@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     color: '#64748b', // slate-500
-    letterSpacing: 0.5,
+    letterSpacing: 0.5, // letter spacing
   },
 });
 

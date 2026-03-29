@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import { servicesAPI } from '../../api';
 import { useAuth } from '../../contexts/AuthContext';
@@ -155,7 +156,7 @@ const AdminServicesScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={services}
         renderItem={renderService}
@@ -252,7 +253,7 @@ const AdminServicesScreen = () => {
           </View>
         </KeyboardAvoidingView>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 

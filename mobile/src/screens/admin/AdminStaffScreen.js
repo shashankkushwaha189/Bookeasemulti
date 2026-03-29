@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import { staffAPI } from '../../api';
 import { useAuth } from '../../contexts/AuthContext';
@@ -153,7 +154,7 @@ const AdminStaffScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={staff}
         renderItem={renderStaff}
@@ -265,7 +266,7 @@ const AdminStaffScreen = () => {
           </View>
         </KeyboardAvoidingView>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 

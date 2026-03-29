@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import { appointmentsAPI } from '../../api';
 import { useFocusEffect } from '@react-navigation/native';
@@ -106,7 +107,7 @@ const AdminAppointmentsScreen = () => {
   const statCancelled = appointments.filter(a => a.status === 'CANCELLED').length;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={displayed}
         renderItem={renderAppointment}
@@ -165,7 +166,7 @@ const AdminAppointmentsScreen = () => {
           </View>
         }
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

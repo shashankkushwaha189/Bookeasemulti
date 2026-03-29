@@ -45,7 +45,7 @@ const BusinessDetailScreen = ({ route, navigation }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const steps = ['Select Service', 'Select Staff', 'Pick Date & Time', 'Confirm'];
+  const steps = ['Service', 'Staff', 'Date & Time', 'Confirm'];
 
   useEffect(() => {
     loadBusinessData();
@@ -308,7 +308,7 @@ const BusinessDetailScreen = ({ route, navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
         <TouchableOpacity style={styles.backArrow} onPress={() => navigation.goBack()}>
@@ -359,10 +359,14 @@ const BusinessDetailScreen = ({ route, navigation }) => {
 
           {/* Stepper Logic */}
           <View style={styles.stepperContainer}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start', paddingHorizontal: 16 }}>
               {steps.map((step, index) => (
-                <View key={index} style={styles.stepItemWrapper}>
-                  <View style={styles.stepIndicatorRoot}>
+                <View key={index} style={{ flex: 1, alignItems: 'center' }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+                    {/* Left Line */}
+                    <View style={{ flex: 1, height: 2, backgroundColor: index === 0 ? 'transparent' : (index <= currentStep ? primaryColor : '#e2e8f0') }} />
+                    
+                    {/* Circle */}
                     <View style={[
                       styles.stepCircle, 
                       index < currentStep ? styles.stepCircleCompleted : index === currentStep ? styles.stepCircleActive : styles.stepCircleInactive
@@ -376,17 +380,20 @@ const BusinessDetailScreen = ({ route, navigation }) => {
                         ]}>{index + 1}</Text>
                       )}
                     </View>
-                    <Text style={[
-                      styles.stepLabel,
-                      index <= currentStep ? styles.stepLabelActive : styles.stepLabelInactive
-                    ]}>{step}</Text>
+
+                    {/* Right Line */}
+                    <View style={{ flex: 1, height: 2, backgroundColor: index === steps.length - 1 ? 'transparent' : (index < currentStep ? primaryColor : '#e2e8f0') }} />
                   </View>
-                  {index < steps.length - 1 && (
-                    <View style={[styles.stepLine, index < currentStep ? styles.stepLineCompleted : styles.stepLineInactive]} />
-                  )}
+                  
+                  {/* Label */}
+                  <Text style={[
+                    styles.stepLabel,
+                    index <= currentStep ? styles.stepLabelActive : styles.stepLabelInactive,
+                    { textAlign: 'center', marginTop: 8, fontSize: 11, paddingHorizontal: 2 }
+                  ]}>{step}</Text>
                 </View>
               ))}
-            </ScrollView>
+            </View>
           </View>
 
           <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
@@ -398,7 +405,7 @@ const BusinessDetailScreen = ({ route, navigation }) => {
         </SafeAreaView>
       </Modal>
 
-    </View>
+    </SafeAreaView>
   );
 };
 

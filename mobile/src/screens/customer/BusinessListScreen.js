@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   TextInput,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import PageLoader from '../../components/PageLoader';
 import { businessAPI } from '../../api';
@@ -108,7 +109,7 @@ const BusinessListScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={[styles.header, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }]}>
         <View style={{ flex: 1, paddingRight: 12 }}>
           <Text style={styles.title}>Find & Book</Text>
@@ -167,7 +168,7 @@ const BusinessListScreen = () => {
           }
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

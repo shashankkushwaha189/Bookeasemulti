@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
+  SafeAreaView,
 } from 'react-native';
 import PageLoader from '../../components/PageLoader';
 import { staffAPI, appointmentsAPI } from '../../api';
@@ -139,7 +140,7 @@ const StaffDashboardScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={displayed}
         renderItem={renderAppointment}
@@ -197,7 +198,7 @@ const StaffDashboardScreen = () => {
           </View>
         }
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

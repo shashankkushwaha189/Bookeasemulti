@@ -13,6 +13,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import { businessAPI } from '../../api';
 import { CATEGORIES, getCategoryIcon } from '../../config/categories';
@@ -199,7 +200,7 @@ const SuperAdminBusinessesScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={filtered}
         renderItem={renderBusiness}
@@ -342,7 +343,7 @@ const SuperAdminBusinessesScreen = () => {
           </View>
         </KeyboardAvoidingView>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 

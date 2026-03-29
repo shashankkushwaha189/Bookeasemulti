@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import { superAdminAPI } from '../../api';
 
@@ -131,7 +132,7 @@ const SuperAdminUsersScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={filtered}
         renderItem={renderUser}
@@ -242,7 +243,7 @@ const SuperAdminUsersScreen = () => {
           </View>
         </KeyboardAvoidingView>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 

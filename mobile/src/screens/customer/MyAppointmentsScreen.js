@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
+  SafeAreaView,
 } from 'react-native';
 import { appointmentsAPI } from '../../api';
 import { getCategoryIcon } from '../../config/categories';
@@ -178,7 +179,7 @@ const MyAppointmentsScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={filteredAppointments}
         keyExtractor={(item) => item.id.toString()}
@@ -246,7 +247,7 @@ const MyAppointmentsScreen = () => {
           </View>
         }
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
