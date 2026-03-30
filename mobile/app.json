@@ -19,11 +19,17 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.shashank_24.bookeasemobile"
     },
     "web": {
       "bundler": "metro",
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4985968a-7208-4a88-b247-d79610d75fec"
+      }
     }
   }
 }
