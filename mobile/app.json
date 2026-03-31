@@ -16,8 +16,10 @@
     "ios": {
       "supportsTablet": true
     },
+    "icon": "./assets/icon.png",
     "android": {
       "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.shashank_24.bookeasemobile"

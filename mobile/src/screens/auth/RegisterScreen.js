@@ -61,7 +61,7 @@ const RegisterScreen = ({ navigation }) => {
             <View style={styles.logo}>
               <Text style={styles.logoText}>B</Text>
             </View>
-            <Text style={styles.title}>BookEase Pro</Text>
+            <Text style={styles.title}>BookEase</Text>
             <Text style={styles.subtitle}>Create your account</Text>
           </View>
 
