@@ -87,7 +87,6 @@ const Login = () => {
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
               onError={() => setError('Google Authentication Failed.')}
-              useOneTap
               shape="pill"
             />
           </div>
