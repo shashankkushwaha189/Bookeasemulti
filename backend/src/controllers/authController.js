@@ -65,7 +65,7 @@ const register = async (req, res) => {
       } else {
         // Resend OTP for existing unverified user
         await user.update({ otp, otp_expires_at });
-        await sendOTP(email, otp);
+        sendOTP(email, otp); // Fire and forget email to speed up response
         return res.status(200).json({ message: 'OTP re-sent to email.', email: user.email });
       }
     }
@@ -73,7 +73,7 @@ const register = async (req, res) => {
     user = await User.create({ email, password, role: 'CUSTOMER', is_verified: false, otp, otp_expires_at });
     await Customer.create({ user_id: user.id, name, phone: phone || '' });
     
-    await sendOTP(email, otp);
+    sendOTP(email, otp); // Fire and forget email to speed up response
     
     return res.status(201).json({ message: 'Registration initiated. OTP sent to email.', email: user.email });
   } catch (err) { console.error(err); return res.status(500).json({ message: 'Server error.' }); }

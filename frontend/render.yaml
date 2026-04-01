@@ -14,3 +14,7 @@ services:
       - type: file
         source: /404.html
         destination: /404.html
+    headers:
+      - path: /*
+        name: Cross-Origin-Opener-Policy
+        value: same-origin-allow-popups
