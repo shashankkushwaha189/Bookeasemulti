@@ -5,7 +5,12 @@ const bcrypt = require('bcryptjs');
 const User = sequelize.define('User', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   email: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { isEmail: true } },
-  password: { type: DataTypes.STRING, allowNull: false },
+  password: { type: DataTypes.STRING, allowNull: true },
+  auth_provider: { type: DataTypes.STRING, allowNull: false, defaultValue: 'local' },
+  google_id: { type: DataTypes.STRING, allowNull: true, unique: true },
+  is_verified: { type: DataTypes.BOOLEAN, defaultValue: false },
+  otp: { type: DataTypes.STRING, allowNull: true },
+  otp_expires_at: { type: DataTypes.DATE, allowNull: true },
   role: {
     type: DataTypes.ENUM('SUPER_ADMIN', 'ADMIN', 'STAFF', 'CUSTOMER'),
     allowNull: false,

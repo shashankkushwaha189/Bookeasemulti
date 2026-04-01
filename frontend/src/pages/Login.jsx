@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../routes/AuthContext';
+import { GoogleLogin } from '@react-oauth/google';
 
 const roleMap = { SUPER_ADMIN: '/super-admin/dashboard', ADMIN: '/admin/dashboard', STAFF: '/staff/dashboard', CUSTOMER: '/businesses' };
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, googleLogin } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
@@ -17,6 +18,18 @@ const Login = () => {
     try { const user = await login(form.email, form.password); navigate(roleMap[user.role] || '/businesses'); }
     catch (err) { setError(err.response?.data?.message || 'Login failed.'); }
     finally { setLoading(false); }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setError(''); setLoading(true);
+    try {
+      const user = await googleLogin(credentialResponse.credential);
+      navigate(roleMap[user.role] || '/businesses');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Google Login failed.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -62,6 +75,21 @@ const Login = () => {
             </div>
             <button type="submit" className="btn-primary w-full" disabled={loading}>{loading ? 'Signing in…' : 'Sign in'}</button>
           </form>
+
+          <div className="mt-6 flex items-center justify-center space-x-2">
+            <span className="h-px w-1/4 bg-slate-200"></span>
+            <span className="text-xs text-slate-400">or continue with</span>
+            <span className="h-px w-1/4 bg-slate-200"></span>
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Google Authentication Failed.')}
+              useOneTap
+              shape="pill"
+            />
+          </div>
           <p className="text-center text-sm xs:text-xs text-slate-500 mt-4 xs:mt-3">New here? <Link to="/register" className="text-primary-600 hover:underline font-medium">Create account</Link></p>
         </div>
       </div>

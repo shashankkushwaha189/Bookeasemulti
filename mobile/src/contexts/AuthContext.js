@@ -72,6 +72,17 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       const response = await authAPI.register(userData);
+      // Backend now returns HTTP 201 with message, but NO token yet.
+      return { success: true, email: response.data.email, message: response.data.message };
+    } catch (error) {
+      const message = error.response?.data?.message || 'Registration failed';
+      return { success: false, error: message };
+    }
+  };
+
+  const verifyOtp = async (email, otp) => {
+    try {
+      const response = await authAPI.verifyOtp({ email, otp });
       const { token: newToken, user: newUser } = response.data;
       
       await AsyncStorage.setItem('token', newToken);
@@ -82,7 +93,7 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.message || 'Registration failed';
+      const message = error.response?.data?.message || 'Verification failed';
       return { success: false, error: message };
     }
   };
@@ -108,6 +119,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     register,
+    verifyOtp,
     logout,
     updateUser,
     isAuthenticated: !!token,

@@ -20,7 +20,9 @@ const RegisterScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { register } = useAuth();
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [otp, setOtp] = useState('');
+  const { register, verifyOtp } = useAuth();
 
   const handleRegister = async () => {
     setError('');
@@ -38,9 +40,30 @@ const RegisterScreen = ({ navigation }) => {
       const result = await register({ ...form, role: 'CUSTOMER' });
       if (!result.success) {
         setError(result.error || 'Registration failed.');
+      } else {
+        setIsOtpSent(true);
       }
     } catch (error) {
       setError('An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    setError('');
+    if (otp.length !== 6) {
+      setError('Please enter the 6-digit code.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const result = await verifyOtp(form.email, otp);
+      if (!result.success) {
+        setError(result.error || 'Verification failed.');
+      }
+    } catch (e) {
+      setError('Unexpected error during verification.');
     } finally {
       setLoading(false);
     }
@@ -73,7 +96,8 @@ const RegisterScreen = ({ navigation }) => {
             </View>
           ) : null}
 
-          <View style={styles.form}>
+          {!isOtpSent ? (
+            <View style={styles.form}>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Full Name</Text>
               <TextInput
@@ -152,6 +176,41 @@ const RegisterScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
+          ) : (
+            <View style={styles.form}>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Enter the 6-digit code sent to {form.email}</Text>
+                <TextInput
+                  style={[styles.input, { textAlign: 'center', fontSize: 28, letterSpacing: 8, marginTop: 12 }]}
+                  placeholder="000000"
+                  keyboardType="number-pad"
+                  maxLength={6}
+                  value={otp}
+                  onChangeText={setOtp}
+                />
+              </View>
+
+              <TouchableOpacity 
+                style={[styles.button, loading && styles.buttonDisabled]} 
+                onPress={handleVerifyOtp}
+                disabled={loading}
+                activeOpacity={0.8}
+              >
+                {loading ? (
+                  <ActivityIndicator color="#fff" size="small" />
+                ) : (
+                   <Text style={styles.buttonText}>Verify Account</Text>
+                )}
+              </TouchableOpacity>
+
+              <View style={styles.footer}>
+                <TouchableOpacity onPress={() => setIsOtpSent(false)}>
+                  <Text style={styles.linkText}>Back to Register</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

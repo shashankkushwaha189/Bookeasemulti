@@ -20,6 +20,20 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (data) => {
     const res = await authAPI.register(data);
+    return res.data; // Now returns { message, email } instead of token
+  };
+
+  const verifyOtp = async (email, otp) => {
+    const res = await authAPI.verifyOtp({ email, otp });
+    const { token, user } = res.data;
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    setUser(user);
+    return user;
+  };
+
+  const googleLogin = async (idToken) => {
+    const res = await authAPI.googleLogin({ idToken });
     const { token, user } = res.data;
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
@@ -33,7 +47,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  return <AuthContext.Provider value={{ user, login, register, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, login, register, verifyOtp, googleLogin, logout }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
