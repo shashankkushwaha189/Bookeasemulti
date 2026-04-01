@@ -1,4 +1,4 @@
-# BookEase Pro v3.0 — Universal Appointment Platform
+# BookEase v3.0 — Universal Appointment Platform
 
 A comprehensive appointment booking system that works for ANY appointment-based business:
 🏥 Healthcare · 🦷 Dental · 💇 Salon · 💆 Spa · 🏋️ Fitness · 🐾 Veterinary · 🦴 Physiotherapy · ⚖️ Legal · 📚 Coaching · 🏢 Other
@@ -353,4 +353,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**BookEase Pro v3.0** - The Universal Appointment Platform 🚀
+**BookEase v3.0** - The Universal Appointment Platform 🚀

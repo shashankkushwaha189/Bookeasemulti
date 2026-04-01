@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 const sendOTP = async (email, otp) => {
   try {
     const mailOptions = {
-      from: `"BookEase Pro" <${process.env.SMTP_USER}>`,
+      from: `"BookEase" <${process.env.SMTP_USER}>`,
       to: email,
       subject: 'Verify your BookEase Account',
       html: `

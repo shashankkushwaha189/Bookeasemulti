@@ -16,7 +16,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/health', (req, res) => res.json({ status: 'ok', message: 'BookEase Pro API running' }));
+app.get('/health', (req, res) => res.json({ status: 'ok', message: 'BookEase API running' }));
 
 app.use('/auth',         require('./src/routes/auth'));
 app.use('/businesses',   require('./src/routes/businesses'));
@@ -43,7 +43,7 @@ const start = async () => {
       require('./seed.js');
     }
     
-    app.listen(PORT, () => console.log('🚀 BookEase Pro API → http://localhost:' + PORT));
+    app.listen(PORT, () => console.log('🚀 BookEase API → http://localhost:' + PORT));
   } catch (err) {
     console.error('❌ Startup failed:', err);
     process.exit(1);

@@ -42,7 +42,7 @@ const Register = () => {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="w-14 h-14 bg-primary-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4 shadow-lg">B</div>
-          <h1 className="text-3xl font-bold text-slate-900">BookEase Pro</h1>
+          <h1 className="text-3xl font-bold text-slate-900">BookEase</h1>
           <p className="text-slate-500 mt-1">Create your account</p>
         </div>
         <div className="card shadow-md">
@@ -65,6 +65,7 @@ const Register = () => {
                       onChange={e => setForm({ ...form, password: e.target.value })} 
                       required 
                       minLength={6}
+                      autoComplete="new-password"
                     />
                     <button
                       type="button"
