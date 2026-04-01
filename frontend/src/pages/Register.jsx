@@ -53,8 +53,8 @@ const Register = () => {
             <>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div><label className="label">Full Name</label><input className="input" placeholder="Jane Smith" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required /></div>
-                <div><label className="label">Email</label><input type="email" className="input" placeholder="you@example.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required /></div>
-                <div><label className="label">Phone</label><input className="input" placeholder="+91 9876543210" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} /></div>
+                <div><label className="label">Email</label><input type="email" className="input" placeholder="you@example.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required autoComplete="username" /></div>
+                <div><label className="label">Phone</label><input className="input" placeholder="+91 9876543210" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} autoComplete="tel" /></div>
                 <div><label className="label">Password</label>
                   <div className="relative">
                     <input 

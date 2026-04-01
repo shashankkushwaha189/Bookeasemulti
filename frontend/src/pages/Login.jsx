@@ -44,7 +44,7 @@ const Login = () => {
           <h2 className="text-xl xs:text-lg font-semibold text-slate-800 mb-6 xs:mb-4">Sign in</h2>
           {error && <div className="mb-4 p-3 xs:p-2 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm xs:text-xs">{error}</div>}
           <form onSubmit={handleSubmit} className="space-y-4 xs:space-y-3">
-            <div><label className="label">Email</label><input type="email" className="input" placeholder="you@example.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required /></div>
+            <div><label className="label">Email</label><input type="email" className="input" placeholder="you@example.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required autoComplete="username" /></div>
             <div><label className="label">Password</label>
               <div className="relative">
                 <input 
