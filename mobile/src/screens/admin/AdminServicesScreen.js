@@ -186,7 +186,7 @@ const AdminServicesScreen = () => {
 
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <KeyboardAvoidingView 
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.modalOverlay}
         >
           <View style={styles.modalContent}>

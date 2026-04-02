@@ -14,7 +14,7 @@ import PageLoader from '../../components/PageLoader';
 import { businessAPI } from '../../api';
 import { getCategoryIcon } from '../../config/categories';
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowRightOnRectangleIcon } from 'react-native-heroicons/outline';
 import { useAuth } from '../../contexts/AuthContext';
 
 const primaryColor = '#2563eb'; // blue-600
@@ -116,7 +116,7 @@ const BusinessListScreen = () => {
           <Text style={styles.subtitle}>Browse businesses and book appointments instantly</Text>
         </View>
         <TouchableOpacity onPress={logout} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: '#fee2e2', borderRadius: 8 }}>
-          <Ionicons name="log-out-outline" size={20} color="#ef4444" />
+          <ArrowRightOnRectangleIcon size={20} color="#ef4444" />
           <Text style={{ color: '#ef4444', fontWeight: 'bold', fontSize: 14 }}>Logout</Text>
         </TouchableOpacity>
       </View>

@@ -34,27 +34,23 @@ const AdminDashboard = () => {
   return (
     <Layout>
       <div className="mb-6">
-        <h1 className="page-title">Admin Dashboard</h1>
-        <p className="page-subtitle">Manage your business operations</p>
-      </div>
-      <div className="mb-6">
         <div className="flex items-center gap-3">
-          <span className="text-3xl">{catIcon}</span>
-          <div>
-            <h1 className="page-title">{user?.businessName || 'Dashboard'}</h1>
+          <span className="text-3xl flex-shrink-0">{catIcon}</span>
+          <div className="min-w-0">
+            <h1 className="page-title truncate">{user?.businessName || 'Dashboard'}</h1>
             <p className="page-subtitle">{user?.businessCategory} · Business overview</p>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
         <StatCard label="Total Appointments" value={appointments.length} icon={<CalendarDaysIcon className="w-7 h-7" />} color="blue" />
         <StatCard label="Today's Bookings"   value={todayCount}          icon={<ClockIcon className="w-7 h-7" />} color="amber" />
         <StatCard label="Staff Members"      value={staff.length}        icon={<UserGroupIcon className="w-7 h-7" />} color="purple" />
         <StatCard label="Services"           value={services.length}     icon={<SparklesIcon className="w-7 h-7" />} color="emerald" />
       </div>
 
-      <div className="card p-0 overflow-hidden">
+      <div className="card p-0 overflow-hidden mt-2">
         <div className="px-6 py-4 border-b border-slate-100"><h2 className="font-semibold text-slate-800">Recent Appointments</h2></div>
         <div className="table-wrapper border-0 rounded-none">
           <table className="table">

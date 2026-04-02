@@ -41,9 +41,12 @@ const AdminServices = () => {
 
   return (
     <Layout>
-      <div className="mb-6 flex items-center justify-between">
-        <div><h1 className="page-title">Services</h1><p className="page-subtitle">Manage {serviceLabel.toLowerCase()}s offered at your business</p></div>
-        <button className="btn-primary xs:mr-4" onClick={openAdd}>+ Add Service</button>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+        <div>
+          <h1 className="page-title">Services</h1>
+          <p className="page-subtitle">Manage {serviceLabel.toLowerCase()}s offered at your business</p>
+        </div>
+        <button className="btn-primary self-start sm:self-auto" onClick={openAdd}>+ Add Service</button>
       </div>
 
       {loading ? <div className="text-slate-400 text-sm">Loading…</div> : (

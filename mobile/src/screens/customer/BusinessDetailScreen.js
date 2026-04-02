@@ -13,7 +13,7 @@ import {
 import { businessAPI, appointmentsAPI } from '../../api';
 import { getCategoryIcon, getStaffLabel, getServiceLabel } from '../../config/categories';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Ionicons } from '@expo/vector-icons';
+import { CalendarIcon, ArrowLeftIcon, XMarkIcon } from 'react-native-heroicons/outline';
 import PageLoader from '../../components/PageLoader';
 
 const primaryColor = '#2563eb'; // blue-600
@@ -210,7 +210,7 @@ const BusinessDetailScreen = ({ route, navigation }) => {
           <Text style={styles.label}>Date</Text>
           <TouchableOpacity style={styles.datePickerInput} onPress={() => setShowDatePicker(true)}>
             <Text style={styles.datePickerText}>{selectedDate.toISOString().split('T')[0]}</Text>
-            <Ionicons name="calendar-outline" size={20} color="#64748b" />
+            <CalendarIcon size={20} color="#64748b" />
           </TouchableOpacity>
           {showDatePicker && (
             <DateTimePicker
@@ -312,7 +312,7 @@ const BusinessDetailScreen = ({ route, navigation }) => {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
         <TouchableOpacity style={styles.backArrow} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={20} color={primaryColor} />
+          <ArrowLeftIcon size={20} color={primaryColor} />
           <Text style={styles.backArrowText}>Back to Businesses</Text>
         </TouchableOpacity>
 
@@ -351,7 +351,7 @@ const BusinessDetailScreen = ({ route, navigation }) => {
         <SafeAreaView style={styles.modalSafeArea}>
           <View style={styles.modalHeader}>
             <TouchableOpacity onPress={() => setBookingModalVisible(false)} style={styles.modalCloseBtn}>
-              <Ionicons name="close" size={24} color="#64748b" />
+              <XMarkIcon size={24} color="#64748b" />
             </TouchableOpacity>
             <Text style={styles.modalTitle}>Book Appointment</Text>
             <View style={{ width: 24 }} />

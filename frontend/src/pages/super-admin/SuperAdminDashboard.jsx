@@ -28,7 +28,7 @@ const SuperAdminDashboard = () => {
     <Layout>
       <div className="mb-6"><h1 className="page-title">Super Admin Dashboard</h1><p className="page-subtitle">System-wide overview across all businesses</p></div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
         <StatCard label="Total Businesses"   value={stats?.businesses  || 0} icon={<BuildingOfficeIcon className="w-7 h-7" />} color="blue" />
         <StatCard label="Total Staff"        value={stats?.staff       || 0} icon={<UserGroupIcon className="w-7 h-7" />} color="purple" />
         <StatCard label="Total Customers"    value={stats?.customers   || 0} icon={<UsersIcon className="w-7 h-7" />} color="emerald" />

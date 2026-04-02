@@ -43,7 +43,7 @@ const StaffDashboard = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-8">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6">
         <StatCard label="Pending Today" value={todayPending} icon={<CalendarDaysIcon className="w-7 h-7" />} color="blue" />
         <StatCard label="Completed Total" value={appointments.filter(a => a.status === 'COMPLETED').length} icon={<CheckBadgeIcon className="w-7 h-7" />} color="emerald" />
       </div>

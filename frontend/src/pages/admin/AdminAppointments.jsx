@@ -32,7 +32,7 @@ const AdminAppointments = () => {
     <Layout>
       <div className="mb-6"><h1 className="page-title">Appointments</h1><p className="page-subtitle">All appointments at your business</p></div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
         <StatCard label="Total"     value={appointments.length}                                           icon={<CalendarDaysIcon className="w-7 h-7" />} color="purple" />
         <StatCard label="Booked"    value={appointments.filter(a => a.status === 'BOOKED').length}    icon={<ClockIcon className="w-7 h-7" />} color="blue" />
         <StatCard label="Completed" value={appointments.filter(a => a.status === 'COMPLETED').length} icon={<CheckBadgeIcon className="w-7 h-7" />} color="emerald" />

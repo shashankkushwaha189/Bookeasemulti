@@ -70,31 +70,34 @@ const SuperAdminUsers = () => {
 
   return (
     <Layout>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="page-title">All Users</h1>
-          <p className="page-subtitle">System-wide user accounts</p>
-        </div>
-        <div className="flex gap-3">
-          <input 
-            className="input max-w-xs" 
-            placeholder="Search users..." 
-            value={search} 
-            onChange={e => setSearch(e.target.value)} 
-          />
-          <select 
-            className="input max-w-xs" 
-            value={roleFilter} 
-            onChange={e => setRoleFilter(e.target.value)}
-          >
-            <option value="all">All</option>
-            <option value="SUPER_ADMIN">Super Admin</option>
-            <option value="ADMIN">Admin</option>
-            <option value="STAFF">Staff</option>
-            <option value="CUSTOMER">Customer</option>
-          </select>
+      <div className="mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="page-title">All Users</h1>
+            <p className="page-subtitle">System-wide user accounts</p>
+          </div>
+          <div className="flex flex-col xs:flex-row gap-2">
+            <input
+              className="input"
+              placeholder="Search users..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
+            <select
+              className="input"
+              value={roleFilter}
+              onChange={e => setRoleFilter(e.target.value)}
+            >
+              <option value="all">All Roles</option>
+              <option value="SUPER_ADMIN">Super Admin</option>
+              <option value="ADMIN">Admin</option>
+              <option value="STAFF">Staff</option>
+              <option value="CUSTOMER">Customer</option>
+            </select>
+          </div>
         </div>
       </div>
+
 
       {loading ? (
         <div className="text-slate-400 text-sm">Loading…</div>

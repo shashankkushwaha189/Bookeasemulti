@@ -261,7 +261,7 @@ const SuperAdminUsersScreen = () => {
 
       <Modal visible={editModal} animationType="slide" transparent={true}>
         <KeyboardAvoidingView 
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.modalOverlay}
         >
           <View style={styles.modalContent}>
@@ -328,7 +328,7 @@ const SuperAdminUsersScreen = () => {
       {/* Password Reset Modal */}
       <Modal visible={showPasswordReset} animationType="slide" transparent={true}>
         <KeyboardAvoidingView 
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.modalOverlay}
         >
           <View style={styles.modalContent}>

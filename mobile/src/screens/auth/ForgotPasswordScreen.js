@@ -10,7 +10,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { EyeIcon, EyeSlashIcon, LockClosedIcon } from 'react-native-heroicons/outline';
 import { authAPI } from '../../api';
 
 const primaryColor = '#2563eb'; // blue-600
@@ -72,13 +72,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
   return (
     <KeyboardAvoidingView 
       style={styles.container} 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
         <View style={styles.card}>
           <View style={styles.header}>
             <View style={styles.logo}>
-              <Ionicons name="lock-closed" size={32} color="#ffffff" />
+              <LockClosedIcon size={32} color="#ffffff" />
             </View>
             <Text style={styles.title}>
               {step === 1 ? 'Forgot Password' : 'Enter OTP & New Password'}
@@ -160,11 +160,11 @@ const ForgotPasswordScreen = ({ navigation }) => {
                       style={styles.eyeIcon} 
                       onPress={() => setShowPassword(!showPassword)}
                     >
-                      <Ionicons 
-                        name={showPassword ? "eye-outline" : "eye-off-outline"} 
-                        size={20} 
-                        color="#94a3b8" 
-                      />
+                      {showPassword ? (
+                        <EyeIcon size={20} color="#94a3b8" />
+                      ) : (
+                        <EyeSlashIcon size={20} color="#94a3b8" />
+                      )}
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -210,35 +210,38 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
-    padding: 20,
+    padding: 16,
   },
   card: {
     backgroundColor: '#ffffff',
-    borderRadius: 12,
+    borderRadius: 24,
     padding: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
+    width: '100%',
+    maxWidth: 400,
+    alignSelf: 'center',
   },
   header: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 32,
   },
   logo: {
-    width: 60,
-    height: 60,
+    width: 64,
+    height: 64,
     backgroundColor: primaryColor,
-    borderRadius: 16,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
     shadowColor: primaryColor,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+    elevation: 6,
   },
   title: {
     fontSize: 26,
@@ -307,28 +310,30 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f8fafc',
     borderWidth: 1,
-    borderColor: '#cbd5e1',
-    borderRadius: 8,
+    borderColor: '#e2e8f0',
+    borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
     color: '#0f172a',
+    width: '100%',
   },
   button: {
     backgroundColor: primaryColor,
-    borderRadius: 8,
-    paddingVertical: 14,
+    borderRadius: 12,
+    paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 8,
     shadowColor: primaryColor,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 4,
     flexDirection: 'row',
+    width: '100%',
   },
   buttonDisabled: {
     backgroundColor: '#94a3b8',

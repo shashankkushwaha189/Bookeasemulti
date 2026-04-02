@@ -12,7 +12,7 @@ import PageLoader from '../../components/PageLoader';
 import { superAdminAPI, businessAPI, appointmentsAPI } from '../../api';
 import { getCategoryIcon } from '../../config/categories';
 import { useAuth } from '../../contexts/AuthContext';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowRightOnRectangleIcon } from 'react-native-heroicons/outline';
 import { useNavigation } from '@react-navigation/native';
 
 const primaryColor = '#2563eb'; // blue-600
@@ -95,7 +95,7 @@ const SuperAdminDashboardScreen = () => {
             <Text style={styles.pageSubtitle}>System-wide aggregate overview</Text>
           </View>
           <TouchableOpacity onPress={logout} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: '#fee2e2', borderRadius: 8 }}>
-            <Ionicons name="log-out-outline" size={20} color="#ef4444" />
+            <ArrowRightOnRectangleIcon size={20} color="#ef4444" />
             <Text style={{ color: '#ef4444', fontWeight: 'bold', fontSize: 14 }}>Logout</Text>
           </TouchableOpacity>
         </View>

@@ -14,7 +14,7 @@ import { appointmentsAPI } from '../../api';
 import { getCategoryIcon } from '../../config/categories';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+import { ArrowRightOnRectangleIcon, CalendarIcon } from 'react-native-heroicons/outline';
 import PageLoader from '../../components/PageLoader';
 
 const primaryColor = '#2563eb'; // blue-600
@@ -197,7 +197,7 @@ const MyAppointmentsScreen = () => {
                 <Text style={styles.subtitle}>All your bookings across businesses</Text>
               </View>
               <TouchableOpacity onPress={logout} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: '#fee2e2', borderRadius: 8, marginRight: 12 }}>
-                <Ionicons name="log-out-outline" size={20} color="#ef4444" />
+                <ArrowRightOnRectangleIcon size={20} color="#ef4444" />
                 <Text style={{ color: '#ef4444', fontWeight: 'bold', fontSize: 14 }}>Logout</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.headerBookBtn} onPress={() => navigation.navigate('Browse')}>
@@ -238,7 +238,7 @@ const MyAppointmentsScreen = () => {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <View style={styles.emptyIconBox}>
-              <Ionicons name="calendar-outline" size={32} color="#94a3b8" />
+              <CalendarIcon size={32} color="#94a3b8" />
             </View>
             <Text style={styles.emptyTextTitle}>No appointments found</Text>
             <TouchableOpacity style={styles.emptyBookBtn} onPress={() => navigation.navigate('Browse')}>

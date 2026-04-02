@@ -131,7 +131,7 @@ const BusinessDetail = () => {
 
   return (
     <Layout>
-      <div className="relative mb-6 w-full max-w-full px-4 pt-2">
+      <div className="relative mb-6">
         <div className="absolute top-0 right-0 w-[50%] h-full bg-gradient-to-l from-primary-400/10 to-transparent blur-3xl pointer-events-none -z-10"></div>
         <button className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-primary-600 transition-colors mb-6" onClick={() => navigate('/businesses')}>
           <ArrowLeftIcon className="w-4 h-4" /> Back to Businesses
@@ -181,7 +181,7 @@ const BusinessDetail = () => {
         </div>
 
         {/* Stepper */}
-        <div className="flex items-center mb-8 bg-white/50 backdrop-blur-md p-2 rounded-2xl border border-white/60 shadow-sm flex-wrap gap-y-2 overflow-x-auto scrollbar-hide w-full max-w-full">
+        <div className="flex items-center mb-6 overflow-x-auto scrollbar-hide">
           {STEPS.map((s, i) => (
             <div key={i} className="flex items-center px-2">
               <div className={'flex items-center gap-2.5 ' + (i <= step ? 'text-primary-600' : 'text-slate-400')}>
@@ -195,9 +195,9 @@ const BusinessDetail = () => {
             </div>
           ))}
         </div>
+      </div>
 
       {error && <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">{error}</div>}
-
       <div className="max-w-xl">
         {/* Step 0: Service */}
         {step === 0 && (
@@ -331,7 +331,6 @@ const BusinessDetail = () => {
             </div>
           </div>
         )}
-      </div>
       </div>
     </Layout>
   );

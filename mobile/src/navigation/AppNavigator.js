@@ -4,7 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useAuth } from '../contexts/AuthContext';
-import { Ionicons } from '@expo/vector-icons';
+import * as OutlineIcons from 'react-native-heroicons/outline';
+import * as SolidIcons from 'react-native-heroicons/solid';
 
 // Auth Screens
 import LoginScreen from '../screens/auth/LoginScreen';
@@ -29,7 +30,6 @@ import StaffDashboardScreen from '../screens/staff/StaffDashboardScreen';
 import SuperAdminDashboardScreen from '../screens/super-admin/SuperAdminDashboardScreen';
 import SuperAdminBusinessesScreen from '../screens/super-admin/SuperAdminBusinessesScreen';
 import SuperAdminUsersScreen from '../screens/super-admin/SuperAdminUsersScreen';
-import AnalyticsScreen from '../screens/super-admin/AnalyticsScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -38,13 +38,13 @@ const CustomerTabs = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
-        let iconName;
+        let IconComponent;
         if (route.name === 'Browse') {
-          iconName = focused ? 'search' : 'search-outline';
+          IconComponent = focused ? SolidIcons.MagnifyingGlassIcon : OutlineIcons.MagnifyingGlassIcon;
         } else if (route.name === 'MyAppointments') {
-          iconName = focused ? 'calendar' : 'calendar-outline';
+          IconComponent = focused ? SolidIcons.CalendarIcon : OutlineIcons.CalendarIcon;
         }
-        return <Ionicons name={iconName} size={size} color={color} />;
+        return IconComponent ? <IconComponent size={size} color={color} /> : null;
       },
       tabBarActiveTintColor: '#007AFF',
       tabBarInactiveTintColor: 'gray',
@@ -60,17 +60,17 @@ const AdminTabs = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
-        let iconName;
+        let IconComponent;
         if (route.name === 'Dashboard') {
-          iconName = focused ? 'grid' : 'grid-outline';
+          IconComponent = focused ? SolidIcons.Squares2X2Icon : OutlineIcons.Squares2X2Icon;
         } else if (route.name === 'Services') {
-          iconName = focused ? 'cut' : 'cut-outline';
+          IconComponent = focused ? SolidIcons.ScissorsIcon : OutlineIcons.ScissorsIcon;
         } else if (route.name === 'Staff') {
-          iconName = focused ? 'people' : 'people-outline';
+          IconComponent = focused ? SolidIcons.UsersIcon : OutlineIcons.UsersIcon;
         } else if (route.name === 'Appointments') {
-          iconName = focused ? 'calendar' : 'calendar-outline';
+          IconComponent = focused ? SolidIcons.CalendarIcon : OutlineIcons.CalendarIcon;
         }
-        return <Ionicons name={iconName} size={size} color={color} />;
+        return IconComponent ? <IconComponent size={size} color={color} /> : null;
       },
       tabBarActiveTintColor: '#007AFF',
       tabBarInactiveTintColor: 'gray',
@@ -88,11 +88,11 @@ const StaffTabs = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
-        let iconName;
+        let IconComponent;
         if (route.name === 'Dashboard') {
-          iconName = focused ? 'list' : 'list-outline';
+          IconComponent = focused ? SolidIcons.ListBulletIcon : OutlineIcons.ListBulletIcon;
         }
-        return <Ionicons name={iconName} size={size} color={color} />;
+        return IconComponent ? <IconComponent size={size} color={color} /> : null;
       },
       tabBarActiveTintColor: '#007AFF',
       tabBarInactiveTintColor: 'gray',
@@ -107,17 +107,15 @@ const SuperAdminTabs = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
-        let iconName;
+        let IconComponent;
         if (route.name === 'Dashboard') {
-          iconName = focused ? 'stats-chart' : 'stats-chart-outline';
+          IconComponent = focused ? SolidIcons.ChartBarSquareIcon : OutlineIcons.ChartBarSquareIcon;
         } else if (route.name === 'Businesses') {
-          iconName = focused ? 'business' : 'business-outline';
+          IconComponent = focused ? SolidIcons.BuildingOfficeIcon : OutlineIcons.BuildingOfficeIcon;
         } else if (route.name === 'Users') {
-          iconName = focused ? 'people' : 'people-outline';
-        } else if (route.name === 'Analytics') {
-          iconName = focused ? 'bar-chart' : 'bar-chart-outline';
+          IconComponent = focused ? SolidIcons.UsersIcon : OutlineIcons.UsersIcon;
         }
-        return <Ionicons name={iconName} size={size} color={color} />;
+        return IconComponent ? <IconComponent size={size} color={color} /> : null;
       },
       tabBarActiveTintColor: '#007AFF',
       tabBarInactiveTintColor: 'gray',
@@ -127,7 +125,6 @@ const SuperAdminTabs = () => (
     <Tab.Screen name="Dashboard" component={SuperAdminDashboardScreen} />
     <Tab.Screen name="Businesses" component={SuperAdminBusinessesScreen} />
     <Tab.Screen name="Users" component={SuperAdminUsersScreen} />
-    <Tab.Screen name="Analytics" component={AnalyticsScreen} />
   </Tab.Navigator>
 );
 
