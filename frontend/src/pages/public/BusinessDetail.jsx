@@ -255,8 +255,7 @@ const BusinessDetail = () => {
             <div className="mb-6">
               <label className="block text-sm font-bold text-slate-700 mb-2">Select Date</label>
               <div className="relative">
-                <input type="date" className="w-full pl-4 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-all text-slate-800" min={today} value={selected.date} onChange={e => setSelected({ ...selected, date: e.target.value, time: '' })} />
-                <CalendarDaysIcon className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                <input type="date" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-all text-slate-800" min={today} value={selected.date} onChange={e => setSelected({ ...selected, date: e.target.value, time: '' })} />
               </div>
             </div>
             {selected.date && (

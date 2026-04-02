@@ -34,12 +34,9 @@ const StaffDashboard = () => {
   return (
     <Layout>
       <div className="mb-6">
-        <div className="flex items-center gap-3">
-          <CalendarDaysIcon className="w-8 h-8 text-primary-500" />
-          <div>
-            <h1 className="page-title">My Schedule</h1>
-            <p className="page-subtitle">{today ? new Date(today + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : ''}</p>
-          </div>
+        <div>
+          <h1 className="page-title">My Schedule</h1>
+          <p className="page-subtitle">{today ? new Date(today + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : ''}</p>
         </div>
       </div>
 
