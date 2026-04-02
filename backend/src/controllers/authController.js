@@ -46,26 +46,22 @@ const sendOTP = async (email, otp) => {
 };
 
 const sendResetOTP = async (email, otp) => {
-  try {
-    const mailOptions = {
-      from: `"BookEase" <${process.env.SMTP_USER}>`,
-      to: email,
-      subject: 'Reset your BookEase Password',
-      html: `
-        <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; text-align: center;">
-          <h2>Password Reset Request</h2>
-          <p>Please use the following 6-digit code to reset your password.</p>
-          <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #2563eb; margin: 20px 0;">
-            ${otp}
-          </div>
-          <p>This code is valid for 10 minutes. If you didn't request a password reset, please ignore this email.</p>
+  const mailOptions = {
+    from: `"BookEase" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: 'Reset your BookEase Password',
+    html: `
+      <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; text-align: center;">
+        <h2>Password Reset Request</h2>
+        <p>Please use the following 6-digit code to reset your password.</p>
+        <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #2563eb; margin: 20px 0;">
+          ${otp}
         </div>
-      `,
-    };
-    await transporter.sendMail(mailOptions);
-  } catch (error) {
-    console.error('Error sending reset OTP:', error);
-  }
+        <p>This code is valid for 10 minutes. If you didn't request a password reset, please ignore this email.</p>
+      </div>
+    `,
+  };
+  await transporter.sendMail(mailOptions);
 };
 
 const generateToken = (user) =>
@@ -271,12 +267,14 @@ const forgotPassword = async (req, res) => {
     const otp_expires_at = new Date(Date.now() + 10 * 60000); // 10 mins
 
     await user.update({ otp, otp_expires_at });
-    sendResetOTP(email, otp); // Fire and forget email
+    
+    // Await the email send to ensure it succeeds before responding
+    await sendResetOTP(email, otp);
 
     return res.status(200).json({ message: 'OTP sent to email.' });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: 'Server error.' });
+    console.error('Failed to send OTP email:', err);
+    return res.status(500).json({ message: 'Failed to send OTP email. Mail server may be busy/blocked.' });
   }
 };
 
