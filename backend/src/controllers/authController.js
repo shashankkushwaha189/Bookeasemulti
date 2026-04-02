@@ -8,6 +8,9 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Configure Nodemailer
 const transporter = nodemailer.createTransport({
+  pool: true, // Use pooled connections for faster subsequent emails
+  maxConnections: 5,
+  maxMessages: 100,
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
   port: process.env.SMTP_PORT || 587,
   secure: false, // true for 465, false for other ports
@@ -15,6 +18,7 @@ const transporter = nodemailer.createTransport({
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
+  family: 4, // Force IPv4 to prevent ENETUNREACH errors
 });
 
 const sendOTP = async (email, otp) => {
