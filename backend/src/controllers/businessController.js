@@ -55,7 +55,7 @@ const createBusiness = async (req, res) => {
     if (adminEmail && adminPassword) {
       const existing = await User.findOne({ where: { email: adminEmail } });
       if (existing) return res.status(409).json({ message: 'Admin email already exists.' });
-      await User.create({ email: adminEmail, password: adminPassword, role: 'ADMIN', business_id: business.id });
+      await User.create({ email: adminEmail, password: adminPassword, role: 'ADMIN', business_id: business.id, is_verified: true });
     }
     return res.status(201).json(business);
   } catch (err) { console.error(err); return res.status(500).json({ message: 'Server error.' }); }

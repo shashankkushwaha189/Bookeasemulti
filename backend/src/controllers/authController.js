@@ -130,7 +130,13 @@ const login = async (req, res) => {
     if (!valid) return res.status(401).json({ message: 'Invalid credentials.' });
     
     if (!user.is_verified) {
-      return res.status(403).json({ message: 'Account not verified. Please verify your email first.', unverified: true, email: user.email });
+      if (user.role === 'CUSTOMER') {
+        return res.status(403).json({ message: 'Account not verified. Please verify your email first.', unverified: true, email: user.email });
+      } else {
+        // Auto-verify internal roles that were created administratively
+        user.is_verified = true;
+        await user.save();
+      }
     }
 
     let name = email;
