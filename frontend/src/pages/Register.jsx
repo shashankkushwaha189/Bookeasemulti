@@ -16,6 +16,8 @@ const Register = () => {
   const [otp, setOtp] = useState('');
   const [resendLoading, setResendLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [manualOtp, setManualOtp] = useState('');
+  const [showTestOtp, setShowTestOtp] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setError(''); setLoading(true);
@@ -81,15 +83,64 @@ const Register = () => {
   };
 
   const handleResendOtp = async () => {
-    setError(''); setResendLoading(true);
+    setError(''); setSuccessMessage(''); setResendLoading(true);
     try {
-      await register({ ...form, role: 'CUSTOMER' });
-      setError(''); // Clear any existing errors
+      console.log('Resending OTP for email:', form.email);
+      const result = await register({ ...form, role: 'CUSTOMER' });
+      console.log('Resend OTP result:', result);
+      setSuccessMessage('New OTP sent to your email!');
       setOtp(''); // Clear OTP input
+      setManualOtp(''); // Clear manual OTP input
     } catch (err) {
+      console.error('Resend OTP error:', err);
       setError(err.response?.data?.message || 'Failed to resend OTP.');
     } finally {
       setResendLoading(false);
+    }
+  };
+
+  const handleTestOtp = () => {
+    // Common test OTPs for development
+    const testOtps = ['123456', '000000', '111111'];
+    const randomOtp = testOtps[Math.floor(Math.random() * testOtps.length)];
+    setManualOtp(randomOtp);
+    setSuccessMessage(`Test OTP filled: ${randomOtp}`);
+  };
+
+  const handleManualOtpSubmit = async (e) => {
+    e.preventDefault();
+    setError(''); setSuccessMessage('');
+    
+    if (!manualOtp || manualOtp.length !== 6) {
+      setError('Please enter a valid 6-digit OTP code.');
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      console.log('Manual OTP verification for email:', form.email, 'code:', manualOtp);
+      const user = await verifyOtp(form.email, manualOtp);
+      console.log('Manual OTP verification successful:', user);
+      console.log('User role:', user.role);
+      
+      const redirectPath = roleMap[user.role] || '/businesses';
+      console.log('Navigating to:', redirectPath);
+      
+      setSuccessMessage(`Account verified! Redirecting to ${user.role} dashboard...`);
+      
+      setTimeout(() => {
+        navigate(redirectPath);
+      }, 1500);
+    } catch (err) {
+      console.error('Manual OTP verification error:', err);
+      const errorMessage = err.response?.data?.message || 'Verification failed.';
+      setError(errorMessage);
+      
+      if (errorMessage.includes('Invalid or expired OTP')) {
+        setError('Invalid or expired OTP. Please check your email and try again, or request a new OTP.');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -98,6 +149,9 @@ const Register = () => {
     try {
       const user = await googleLogin(credentialResponse.credential);
       console.log('Google signup successful:', user);
+      console.log('User role:', user.role);
+      console.log('User data:', JSON.stringify(user, null, 2));
+      
       // Use role-based navigation
       const redirectPath = roleMap[user.role] || '/businesses';
       console.log('Google signup navigating to:', redirectPath);
@@ -198,6 +252,7 @@ const Register = () => {
             </>
           ) : (
             <div className="space-y-6">
+              {/* Auto-verification form */}
               <form onSubmit={handleVerifyOtp} className="space-y-5">
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 text-center mb-4">Enter the 6-digit code sent to <br/><span className="text-primary-600 font-bold">{form.email}</span></label>
@@ -215,6 +270,45 @@ const Register = () => {
                   {loading ? 'Verifying…' : 'Verify Account'}
                 </button>
               </form>
+
+              {/* Manual verification fallback */}
+              <div className="text-center">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-slate-300"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-transparent text-slate-500">Or verify manually</span>
+                  </div>
+                </div>
+              </div>
+
+              <form onSubmit={handleManualOtpSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-600 text-center mb-2">Manual OTP Entry</label>
+                  <input 
+                    type="text" 
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-2xl font-mono font-bold tracking-[0.2em] focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500 transition-all text-slate-800 placeholder-slate-300" 
+                    placeholder="Enter 6-digit code" 
+                    maxLength={6}
+                    value={manualOtp} 
+                    onChange={(e) => setManualOtp(e.target.value.replace(/\D/g, ''))}
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <button type="submit" className="flex-1 py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-primary-600/10 focus:ring-2 focus:ring-primary-600/50 focus:outline-none active:scale-[0.98]" disabled={loading || manualOtp.length < 6}>
+                    {loading ? 'Verifying…' : 'Verify Manually'}
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={handleTestOtp}
+                    className="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium rounded-xl text-sm transition-all border border-slate-300"
+                  >
+                    Test OTP
+                  </button>
+                </div>
+              </form>
+
               <div className="text-center space-y-4">
                 <button 
                   type="button" 
