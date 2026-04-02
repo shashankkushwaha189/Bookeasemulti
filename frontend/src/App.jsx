@@ -4,6 +4,7 @@ import ProtectedRoute from './routes/ProtectedRoute';
 
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
 
 import SuperAdminDashboard  from './pages/super-admin/SuperAdminDashboard';
 import SuperAdminBusinesses from './pages/super-admin/SuperAdminBusinesses';
@@ -35,6 +36,7 @@ const App = () => (
         <Route path="/"         element={<RootRedirect />} />
         <Route path="/login"    element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         <Route path="/super-admin/dashboard"  element={<ProtectedRoute roles={['SUPER_ADMIN']}><SuperAdminDashboard /></ProtectedRoute>} />
         <Route path="/super-admin/businesses" element={<ProtectedRoute roles={['SUPER_ADMIN']}><SuperAdminBusinesses /></ProtectedRoute>} />

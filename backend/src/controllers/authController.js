@@ -45,6 +45,29 @@ const sendOTP = async (email, otp) => {
   }
 };
 
+const sendResetOTP = async (email, otp) => {
+  try {
+    const mailOptions = {
+      from: `"BookEase" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: 'Reset your BookEase Password',
+      html: `
+        <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; text-align: center;">
+          <h2>Password Reset Request</h2>
+          <p>Please use the following 6-digit code to reset your password.</p>
+          <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #2563eb; margin: 20px 0;">
+            ${otp}
+          </div>
+          <p>This code is valid for 10 minutes. If you didn't request a password reset, please ignore this email.</p>
+        </div>
+      `,
+    };
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error('Error sending reset OTP:', error);
+  }
+};
+
 const generateToken = (user) =>
   jwt.sign(
     { id: user.id, email: user.email, role: user.role, business_id: user.business_id },
@@ -236,4 +259,45 @@ const googleAuth = async (req, res) => {
   }
 };
 
-module.exports = { register, verifyOtp, login, getMe, googleAuth };
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: 'Email is required.' });
+    
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp_expires_at = new Date(Date.now() + 10 * 60000); // 10 mins
+
+    await user.update({ otp, otp_expires_at });
+    sendResetOTP(email, otp); // Fire and forget email
+
+    return res.status(200).json({ message: 'OTP sent to email.' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    if (!email || !otp || !newPassword) return res.status(400).json({ message: 'Email, OTP, and new password are required.' });
+    
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+    
+    if (user.otp !== otp) return res.status(400).json({ message: 'Invalid OTP.' });
+    if (new Date() > user.otp_expires_at) return res.status(400).json({ message: 'OTP has expired. Please request a new one.' });
+
+    await user.update({ password: newPassword, otp: null, otp_expires_at: null });
+    
+    return res.status(200).json({ message: 'Password reset successfully. You can now login.' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+module.exports = { register, verifyOtp, login, getMe, googleAuth, forgotPassword, resetPassword };
