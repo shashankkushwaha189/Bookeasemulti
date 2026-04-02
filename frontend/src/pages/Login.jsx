@@ -16,7 +16,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); setError(''); setLoading(true);
     try { const user = await login(form.email, form.password); navigate(roleMap[user.role] || '/businesses'); }
-    catch (err) { setError(err.response?.data?.message || 'Login failed.'); }
+    catch (err) { 
+      if (err.response?.data?.unverified) {
+        navigate('/register', { state: { email: form.email, requireVerification: true, message: err.response.data.message } });
+      } else {
+        setError(err.response?.data?.message || 'Login failed.'); 
+      }
+    }
     finally { setLoading(false); }
   };
 

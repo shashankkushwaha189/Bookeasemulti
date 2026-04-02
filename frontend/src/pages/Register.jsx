@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../routes/AuthContext';
 import { GoogleLogin } from '@react-oauth/google';
 
@@ -8,11 +8,12 @@ const roleMap = { SUPER_ADMIN: '/super-admin/dashboard', ADMIN: '/admin/dashboar
 const Register = () => {
   const { register, verifyOtp, googleLogin } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', password: '', phone: '' });
-  const [error, setError] = useState('');
+  const location = useLocation();
+  const [form, setForm] = useState({ name: '', email: location.state?.email || '', password: '', phone: '' });
+  const [error, setError] = useState(location.state?.message || '');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isOtpSent, setIsOtpSent] = useState(location.state?.requireVerification || false);
   const [otp, setOtp] = useState('');
   const [resendLoading, setResendLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');

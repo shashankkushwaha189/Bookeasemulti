@@ -57,16 +57,17 @@ const RegisterScreen = ({ navigation }) => {
     }
   };
 
-  const handleVerifyOtp = async () => {
+  const handleVerifyOtp = async (directOtp = null) => {
     setError('');
     setSuccess('');
-    if (otp.length !== 6) {
+    const codeToVerify = directOtp || otp;
+    if (codeToVerify.length !== 6) {
       setError('Please enter the 6-digit code.');
       return;
     }
     setLoading(true);
     try {
-      const result = await verifyOtp(form.email, otp);
+      const result = await verifyOtp(form.email, codeToVerify);
       if (!result.success) {
         setError(result.error || 'Verification failed.');
       } else {
@@ -262,7 +263,7 @@ const RegisterScreen = ({ navigation }) => {
                     const numericVal = val.replace(/\D/g, '');
                     setOtp(numericVal);
                     if (numericVal.length === 6) {
-                      handleVerifyOtp();
+                      handleVerifyOtp(numericVal);
                     }
                   }}
                 />
@@ -270,7 +271,7 @@ const RegisterScreen = ({ navigation }) => {
 
               <TouchableOpacity 
                 style={[styles.button, loading && styles.buttonDisabled]} 
-                onPress={handleVerifyOtp}
+                onPress={() => handleVerifyOtp()}
                 disabled={loading}
                 activeOpacity={0.8}
               >

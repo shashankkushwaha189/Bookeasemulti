@@ -83,8 +83,10 @@ const register = async (req, res) => {
       if (user.is_verified) {
         return res.status(409).json({ message: 'Email already registered and verified. Please login.' });
       } else {
-        // Resend OTP for existing unverified user
-        await user.update({ otp, otp_expires_at });
+        // Resend OTP for existing unverified user and update their details
+        await user.update({ otp, otp_expires_at, password });
+        let customer = await Customer.findOne({ where: { user_id: user.id } });
+        if (customer) await customer.update({ name, phone: phone || '' });
         try {
           await sendOTP(email, otp);
           return res.status(200).json({ message: 'OTP re-sent to email.', email: user.email });
@@ -118,7 +120,7 @@ const verifyOtp = async (req, res) => {
     
     if (user.is_verified) return res.status(400).json({ message: 'User is already verified.' });
     
-    if (user.otp !== otp) return res.status(400).json({ message: 'Invalid OTP.' });
+    if (String(user.otp) !== String(otp)) return res.status(400).json({ message: 'Invalid OTP.' });
     
     if (new Date() > user.otp_expires_at) return res.status(400).json({ message: 'OTP has expired. Please request a new one.' });
 
@@ -155,7 +157,15 @@ const login = async (req, res) => {
     
     if (!user.is_verified) {
       if (user.role === 'CUSTOMER') {
-        return res.status(403).json({ message: 'Account not verified. Please verify your email first.', unverified: true, email: user.email });
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const otp_expires_at = new Date(Date.now() + 10 * 60000);
+        await user.update({ otp, otp_expires_at });
+        try {
+          await sendOTP(email, otp);
+        } catch (mailErr) {
+          console.error("Resend OTP Mail Error during login:", mailErr);
+        }
+        return res.status(403).json({ message: 'Account not verified. A new OTP has been sent to your email.', unverified: true, email: user.email });
       } else {
         // Auto-verify internal roles that were created administratively
         user.is_verified = true;
@@ -291,7 +301,7 @@ const resetPassword = async (req, res) => {
     const user = await User.findOne({ where: { email } });
     if (!user) return res.status(404).json({ message: 'User not found.' });
     
-    if (user.otp !== otp) return res.status(400).json({ message: 'Invalid OTP.' });
+    if (String(user.otp) !== String(otp)) return res.status(400).json({ message: 'Invalid OTP.' });
     if (new Date() > user.otp_expires_at) return res.status(400).json({ message: 'OTP has expired. Please request a new one.' });
 
     await user.update({ password: newPassword, otp: null, otp_expires_at: null });
