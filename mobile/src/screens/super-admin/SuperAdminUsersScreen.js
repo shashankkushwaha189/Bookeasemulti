@@ -32,12 +32,16 @@ const SuperAdminUsersScreen = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('email');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   const [editModal, setEditModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [editForm, setEditForm] = useState({ email: '', role: '' });
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
 
   useEffect(() => {
     loadUsers();
@@ -58,6 +62,20 @@ const SuperAdminUsersScreen = () => {
     const matchSearch = u.email.toLowerCase().includes(search.toLowerCase());
     const matchRole = roleFilter === 'all' || u.role === roleFilter;
     return matchSearch && matchRole;
+  }).sort((a, b) => {
+    let aVal = a[sortBy];
+    let bVal = b[sortBy];
+    
+    if (sortBy === 'business') {
+      aVal = a.business?.name || '';
+      bVal = b.business?.name || '';
+    }
+    
+    if (sortOrder === 'asc') {
+      return aVal > bVal ? 1 : -1;
+    } else {
+      return aVal < bVal ? 1 : -1;
+    }
   });
 
   const openEdit = (user) => {
@@ -96,6 +114,36 @@ const SuperAdminUsersScreen = () => {
     }
   };
 
+  const handlePasswordReset = async () => {
+    if (!newPassword || newPassword.length < 6) {
+      setErrorMsg('Password must be at least 6 characters');
+      return;
+    }
+    
+    setSaving(true);
+    setErrorMsg('');
+    
+    try {
+      await superAdminAPI.updateUser(editingUser.id, { password: newPassword });
+      Alert.alert('Success', 'Password reset successfully');
+      setShowPasswordReset(false);
+      setNewPassword('');
+    } catch (err) {
+      setErrorMsg(err.response?.data?.message || 'Failed to reset password.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleSort = (field) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(field);
+      setSortOrder('asc');
+    }
+  };
+
   const renderUser = ({ item: u }) => {
     const rColors = roleColors[u.role] || { bg: '#f3f4f6', text: '#374151' };
     const canEdit = u.role === 'ADMIN';
@@ -122,6 +170,19 @@ const SuperAdminUsersScreen = () => {
           >
             <Text style={[styles.btnEditText, !canEdit && styles.btnTextDisabled]}>Edit</Text>
           </TouchableOpacity>
+          {canEdit && (
+            <TouchableOpacity 
+              style={styles.btnPassword} 
+              onPress={() => {
+                setEditingUser(u);
+                setShowPasswordReset(true);
+                setNewPassword('');
+                setErrorMsg('');
+              }}
+            >
+              <Text style={styles.btnPasswordText}>Reset Password</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     );
@@ -154,20 +215,40 @@ const SuperAdminUsersScreen = () => {
                   autoCapitalize="none"
                 />
               </View>
+            </View>
 
-              <View style={[styles.filterRowItems, { flexWrap: 'wrap' }]}>
-                {['all', 'SUPER_ADMIN', 'ADMIN', 'STAFF', 'CUSTOMER'].map(f => (
-                  <TouchableOpacity 
-                    key={f}
-                    style={[styles.filterBtn, roleFilter === f ? styles.filterActive : styles.filterInactive]}
-                    onPress={() => setRoleFilter(f)}
-                  >
-                    <Text style={roleFilter === f ? styles.filterTextActive : styles.filterTextInactive}>
-                      {f === 'all' ? 'All' : f.replace('_', ' ')}
+            <View style={styles.filterRowItems}>
+              {['all', 'SUPER_ADMIN', 'ADMIN', 'STAFF', 'CUSTOMER'].map(f => (
+                <TouchableOpacity 
+                  key={f}
+                  style={[styles.filterBtn, roleFilter === f ? styles.filterActive : styles.filterInactive]}
+                  onPress={() => setRoleFilter(f)}
+                >
+                  <Text style={roleFilter === f ? styles.filterTextActive : styles.filterTextInactive}>
+                    {f === 'all' ? 'All' : f.replace('_', ' ')}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <View style={styles.sortRow}>
+              <Text style={styles.sortLabel}>Sort by:</Text>
+              {['email', 'role', 'business'].map(field => (
+                <TouchableOpacity
+                  key={field}
+                  style={[styles.sortBtn, sortBy === field && styles.sortBtnActive]}
+                  onPress={() => handleSort(field)}
+                >
+                  <Text style={sortBy === field ? styles.sortBtnTextActive : styles.sortBtnText}>
+                    {field.charAt(0).toUpperCase() + field.slice(1)}
+                  </Text>
+                  {sortBy === field && (
+                    <Text style={styles.sortArrow}>
+                      {sortOrder === 'asc' ? '↑' : '↓'}
                     </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
+                  )}
+                </TouchableOpacity>
+              ))}
             </View>
           </View>
         }
@@ -243,6 +324,68 @@ const SuperAdminUsersScreen = () => {
           </View>
         </KeyboardAvoidingView>
       </Modal>
+
+      {/* Password Reset Modal */}
+      <Modal visible={showPasswordReset} animationType="slide" transparent={true}>
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.modalOverlay}
+        >
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Reset Password</Text>
+            </View>
+
+            <View style={styles.modalBody}>
+              {errorMsg ? (
+                <View style={styles.errorBox}>
+                  <Text style={styles.errorText}>{errorMsg}</Text>
+                </View>
+              ) : null}
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>User Email</Text>
+                <Text style={styles.staticText}>{editingUser?.email}</Text>
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>New Password</Text>
+                <TextInput 
+                  style={styles.input} 
+                  placeholder="Enter new password (min 6 chars)"
+                  secureTextEntry
+                  value={newPassword} 
+                  onChangeText={setNewPassword}
+                />
+              </View>
+
+              <View style={styles.modalActions}>
+                <TouchableOpacity 
+                  style={[styles.modalBtnPrimary, saving && {opacity: 0.7}]} 
+                  onPress={handlePasswordReset} 
+                  disabled={saving}
+                >
+                  <Text style={styles.modalBtnPrimaryText}>
+                    {saving ? 'Resetting...' : 'Reset Password'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={styles.modalBtnSecondary} 
+                  onPress={() => {
+                    setShowPasswordReset(false);
+                    setEditingUser(null);
+                    setNewPassword('');
+                    setErrorMsg('');
+                  }} 
+                  disabled={saving}
+                >
+                  <Text style={styles.modalBtnSecondaryText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -298,6 +441,42 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     paddingBottom: 8,
+    marginBottom: 16,
+  },
+  sortRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  sortLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#64748b',
+  },
+  sortBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    backgroundColor: '#f1f5f9',
+    gap: 4,
+  },
+  sortBtnActive: {
+    backgroundColor: primaryColor,
+  },
+  sortBtnText: {
+    fontSize: 12,
+    color: '#64748b',
+    fontWeight: '500',
+  },
+  sortBtnTextActive: {
+    color: '#ffffff',
+  },
+  sortArrow: {
+    fontSize: 10,
+    fontWeight: '600',
   },
   filterBtn: {
     paddingVertical: 8,
@@ -397,6 +576,19 @@ const styles = StyleSheet.create({
   },
   btnTextDisabled: {
     color: '#94a3b8',
+  },
+  btnPassword: {
+    backgroundColor: '#fef3c7',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#fde68a',
+  },
+  btnPasswordText: {
+    color: '#b45309',
+    fontSize: 13,
+    fontWeight: '600',
   },
   emptyBox: {
     alignItems: 'center',
@@ -512,6 +704,16 @@ const styles = StyleSheet.create({
     color: '#475569',
     fontSize: 15,
     fontWeight: '600',
+  },
+  staticText: {
+    fontSize: 15,
+    color: '#64748b',
+    fontWeight: '500',
+    padding: 12,
+    backgroundColor: '#f8fafc',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
   },
 });
 

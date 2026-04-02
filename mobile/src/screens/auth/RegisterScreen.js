@@ -25,8 +25,10 @@ const RegisterScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
+  const [resendLoading, setResendLoading] = useState(false);
   const { register, verifyOtp, googleLogin } = useAuth();
 
   const handleRegister = async () => {
@@ -57,6 +59,7 @@ const RegisterScreen = ({ navigation }) => {
 
   const handleVerifyOtp = async () => {
     setError('');
+    setSuccess('');
     if (otp.length !== 6) {
       setError('Please enter the 6-digit code.');
       return;
@@ -66,11 +69,29 @@ const RegisterScreen = ({ navigation }) => {
       const result = await verifyOtp(form.email, otp);
       if (!result.success) {
         setError(result.error || 'Verification failed.');
+      } else {
+        setSuccess('Account verified successfully! Redirecting...');
+        // Navigation will be handled automatically by AuthContext/AppNavigator
       }
     } catch (e) {
       setError('Unexpected error during verification.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    setError('');
+    setSuccess('');
+    setResendLoading(true);
+    try {
+      await register({ ...form, role: 'CUSTOMER' });
+      setSuccess('New OTP sent to your email!');
+      setOtp(''); // Clear OTP input
+    } catch (error) {
+      setError(error.error || 'Failed to resend OTP.');
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -119,6 +140,12 @@ const RegisterScreen = ({ navigation }) => {
           {error ? (
             <View style={styles.errorContainer}>
               <Text style={styles.errorText}>{error}</Text>
+            </View>
+          ) : null}
+          
+          {success ? (
+            <View style={styles.successContainer}>
+              <Text style={styles.successText}>{success}</Text>
             </View>
           ) : null}
 
@@ -208,7 +235,7 @@ const RegisterScreen = ({ navigation }) => {
               activeOpacity={0.8}
             >
               <Ionicons name="logo-google" size={20} color="#0f172a" style={{ marginRight: 10 }} />
-              <Text style={styles.googleButtonText}>Sign in with Google</Text>
+              <Text style={styles.googleButtonText}>Sign up with Google</Text>
             </TouchableOpacity>
 
             <View style={styles.footer}>
@@ -228,7 +255,13 @@ const RegisterScreen = ({ navigation }) => {
                   keyboardType="number-pad"
                   maxLength={6}
                   value={otp}
-                  onChangeText={setOtp}
+                  onChangeText={(val) => {
+                    const numericVal = val.replace(/\D/g, '');
+                    setOtp(numericVal);
+                    if (numericVal.length === 6) {
+                      handleVerifyOtp();
+                    }
+                  }}
                 />
               </View>
 
@@ -244,6 +277,18 @@ const RegisterScreen = ({ navigation }) => {
                    <Text style={styles.buttonText}>Verify Account</Text>
                 )}
               </TouchableOpacity>
+
+              <View style={styles.resendContainer}>
+                <TouchableOpacity 
+                  onPress={handleResendOtp}
+                  disabled={resendLoading}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.resendText}>
+                    {resendLoading ? 'Sending...' : "Didn't receive the code? Resend OTP"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
               <View style={styles.footer}>
                 <TouchableOpacity onPress={() => setIsOtpSent(false)}>
@@ -329,6 +374,18 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: '#b91c1c',
+    fontSize: 14,
+  },
+  successContainer: {
+    backgroundColor: '#ecfdf5',
+    borderWidth: 1,
+    borderColor: '#a7f3d0',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 20,
+  },
+  successText: {
+    color: '#059669',
     fontSize: 14,
   },
   form: {
@@ -432,6 +489,15 @@ const styles = StyleSheet.create({
     color: primaryColor,
     fontSize: 14,
     fontWeight: '600',
+  },
+  resendContainer: {
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  resendText: {
+    color: primaryColor,
+    fontSize: 14,
+    fontWeight: '500',
   },
 });
 

@@ -29,6 +29,19 @@ const StatCard = ({ label, value, icon, bgColor, textColor }) => (
   </View>
 );
 
+const QuickActionCard = ({ title, subtitle, onPress, icon, bgColor }) => (
+  <TouchableOpacity style={[styles.quickActionCard, { backgroundColor: bgColor }]} onPress={onPress}>
+    <View style={styles.quickActionIcon}>
+      <Text style={styles.quickActionIconText}>{icon}</Text>
+    </View>
+    <View style={styles.quickActionContent}>
+      <Text style={styles.quickActionTitle}>{title}</Text>
+      <Text style={styles.quickActionSubtitle}>{subtitle}</Text>
+    </View>
+    <Text style={styles.quickActionArrow}>→</Text>
+  </TouchableOpacity>
+);
+
 const SuperAdminDashboardScreen = () => {
   const [stats, setStats] = useState(null);
   const [businesses, setBusinesses] = useState([]);
@@ -92,6 +105,41 @@ const SuperAdminDashboardScreen = () => {
           <StatCard label="Total Staff"        value={stats?.staff       || 0} icon="👤" bgColor="#faf5ff" textColor="#6b21a8" />
           <StatCard label="Total Customers"    value={stats?.customers   || 0} icon="👥" bgColor="#ecfdf5" textColor="#065f46" />
           <StatCard label="Total Appointments" value={stats?.appointments|| 0} icon="📅" bgColor="#fffbeb" textColor="#92400e" />
+        </View>
+
+        {/* Quick Actions */}
+        <View style={styles.quickActionsSection}>
+          <Text style={styles.sectionTitle}>Quick Actions</Text>
+          <View style={styles.quickActionsGrid}>
+            <QuickActionCard 
+              title="Manage Businesses" 
+              subtitle="View and edit all businesses" 
+              onPress={() => navigation.navigate('Businesses')}
+              icon="🏢"
+              bgColor="#dbeafe"
+            />
+            <QuickActionCard 
+              title="Manage Users" 
+              subtitle="Edit user credentials" 
+              onPress={() => navigation.navigate('Users')}
+              icon="👥"
+              bgColor="#dcfce7"
+            />
+            <QuickActionCard 
+              title="View Analytics" 
+              subtitle="System-wide statistics" 
+              onPress={() => navigation.navigate('Analytics')}
+              icon="📊"
+              bgColor="#fef3c7"
+            />
+            <QuickActionCard 
+              title="Recent Activity" 
+              subtitle="Latest appointments" 
+              onPress={() => {}}
+              icon="🕐"
+              bgColor="#f3e8ff"
+            />
+          </View>
         </View>
 
         {/* Businesses Overview */}
@@ -215,31 +263,84 @@ const styles = StyleSheet.create({
   statCard: {
     flex: 1,
     minWidth: '45%',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: 16,
+    padding: 20,
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.02)',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
   },
   statIconWrap: {
-    marginBottom: 8,
+    marginBottom: 12,
   },
   statIcon: {
-    fontSize: 20,
+    fontSize: 24,
   },
   statValue: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '800',
     color: '#0f172a',
-    marginBottom: 2,
+    marginBottom: 4,
   },
   statLabel: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  quickActionsSection: {
+    marginBottom: 24,
+  },
+  quickActionsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  quickActionCard: {
+    flex: 1,
+    minWidth: '45%',
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  quickActionIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  quickActionIconText: {
+    fontSize: 18,
+  },
+  quickActionContent: {
+    flex: 1,
+  },
+  quickActionTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#0f172a',
+    marginBottom: 2,
+  },
+  quickActionSubtitle: {
+    fontSize: 12,
+    color: '#64748b',
+  },
+  quickActionArrow: {
+    fontSize: 16,
+    color: '#64748b',
+    fontWeight: '600',
   },
   cardSection: {
     backgroundColor: '#ffffff',

@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 // Auth Screens
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
+import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 
 // Main Screens
 import BusinessListScreen from '../screens/customer/BusinessListScreen';
@@ -28,6 +29,7 @@ import StaffDashboardScreen from '../screens/staff/StaffDashboardScreen';
 import SuperAdminDashboardScreen from '../screens/super-admin/SuperAdminDashboardScreen';
 import SuperAdminBusinessesScreen from '../screens/super-admin/SuperAdminBusinessesScreen';
 import SuperAdminUsersScreen from '../screens/super-admin/SuperAdminUsersScreen';
+import AnalyticsScreen from '../screens/super-admin/AnalyticsScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -112,6 +114,8 @@ const SuperAdminTabs = () => (
           iconName = focused ? 'business' : 'business-outline';
         } else if (route.name === 'Users') {
           iconName = focused ? 'people' : 'people-outline';
+        } else if (route.name === 'Analytics') {
+          iconName = focused ? 'bar-chart' : 'bar-chart-outline';
         }
         return <Ionicons name={iconName} size={size} color={color} />;
       },
@@ -123,6 +127,7 @@ const SuperAdminTabs = () => (
     <Tab.Screen name="Dashboard" component={SuperAdminDashboardScreen} />
     <Tab.Screen name="Businesses" component={SuperAdminBusinessesScreen} />
     <Tab.Screen name="Users" component={SuperAdminUsersScreen} />
+    <Tab.Screen name="Analytics" component={AnalyticsScreen} />
   </Tab.Navigator>
 );
 
@@ -144,6 +149,7 @@ const AppNavigator = () => {
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
           </>
         ) : (
           <>

@@ -38,6 +38,9 @@ const SuperAdminBusinessesScreen = () => {
   const [errorMsg, setErrorMsg] = useState('');
   
   const [catFilter, setCatFilter] = useState('All');
+  const [sortBy, setSortBy] = useState('name');
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [showInactive, setShowInactive] = useState(true);
 
   useEffect(() => {
     loadBusinesses();
@@ -144,6 +147,35 @@ const SuperAdminBusinessesScreen = () => {
   };
 
   const filtered = catFilter === 'All' ? businesses : businesses.filter(b => b.category === catFilter);
+  const displayBusinesses = showInactive ? filtered : filtered.filter(b => b.is_active);
+  
+  const sortedBusinesses = displayBusinesses.sort((a, b) => {
+    let aVal = a[sortBy];
+    let bVal = b[sortBy];
+    
+    if (sortBy === 'category') {
+      aVal = a.category;
+      bVal = b.category;
+    } else if (sortBy === 'appointments') {
+      aVal = a.appointmentCount || 0;
+      bVal = b.appointmentCount || 0;
+    }
+    
+    if (sortOrder === 'asc') {
+      return aVal > bVal ? 1 : -1;
+    } else {
+      return aVal < bVal ? 1 : -1;
+    }
+  });
+
+  const handleSort = (field) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(field);
+      setSortOrder('asc');
+    }
+  };
 
   const renderBusiness = ({ item: b }) => (
     <View style={styles.card}>
@@ -202,7 +234,7 @@ const SuperAdminBusinessesScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={filtered}
+        data={sortedBusinesses}
         renderItem={renderBusiness}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.list}
@@ -248,6 +280,37 @@ const SuperAdminBusinessesScreen = () => {
                 })}
               </View>
             </ScrollView>
+
+            <View style={styles.controlsRow}>
+              <View style={styles.sortRow}>
+                <Text style={styles.sortLabel}>Sort by:</Text>
+                {['name', 'category', 'appointments'].map(field => (
+                  <TouchableOpacity
+                    key={field}
+                    style={[styles.sortBtn, sortBy === field && styles.sortBtnActive]}
+                    onPress={() => handleSort(field)}
+                  >
+                    <Text style={sortBy === field ? styles.sortBtnTextActive : styles.sortBtnText}>
+                      {field.charAt(0).toUpperCase() + field.slice(1)}
+                    </Text>
+                    {sortBy === field && (
+                      <Text style={styles.sortArrow}>
+                        {sortOrder === 'asc' ? '↑' : '↓'}
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+                ))}
+              </View>
+              
+              <TouchableOpacity 
+                style={[styles.toggleBtn, showInactive && styles.toggleBtnActive]}
+                onPress={() => setShowInactive(!showInactive)}
+              >
+                <Text style={showInactive ? styles.toggleBtnTextActive : styles.toggleBtnText}>
+                  {showInactive ? 'Show Active Only' : 'Show All'}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         }
       />
@@ -404,6 +467,68 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     paddingBottom: 8,
+  },
+  controlsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    flexWrap: 'wrap',
+  },
+  sortRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
+  },
+  sortLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#64748b',
+  },
+  sortBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    backgroundColor: '#f1f5f9',
+    gap: 4,
+  },
+  sortBtnActive: {
+    backgroundColor: primaryColor,
+  },
+  sortBtnText: {
+    fontSize: 12,
+    color: '#64748b',
+    fontWeight: '500',
+  },
+  sortBtnTextActive: {
+    color: '#ffffff',
+  },
+  sortArrow: {
+    fontSize: 10,
+    fontWeight: '600',
+  },
+  toggleBtn: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    backgroundColor: '#f1f5f9',
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+  },
+  toggleBtnActive: {
+    backgroundColor: primaryColor,
+    borderColor: primaryColor,
+  },
+  toggleBtnText: {
+    fontSize: 12,
+    color: '#64748b',
+    fontWeight: '500',
+  },
+  toggleBtnTextActive: {
+    color: '#ffffff',
   },
   filterBtn: {
     paddingVertical: 8,

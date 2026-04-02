@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }) => {
 
   const googleLogin = async (credential) => {
     try {
-      const response = await authAPI.googleLogin({ credential });
+      const response = await authAPI.googleLogin({ idToken: credential });
       const { token: newToken, user: userData } = response.data;
       
       await AsyncStorage.setItem('token', newToken);

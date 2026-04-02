@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../routes/AuthContext';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Register = () => {
-  const { register, verifyOtp } = useAuth();
+  const { register, verifyOtp, googleLogin } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', password: '', phone: '' });
   const [error, setError] = useState('');
@@ -11,6 +12,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
+  const [resendLoading, setResendLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setError(''); setLoading(true);
@@ -32,10 +34,21 @@ const Register = () => {
       return;
     }
     try { 
-      await verifyOtp(form.email, codeToVerify); 
+      console.log('Verifying OTP for email:', form.email, 'code:', codeToVerify);
+      const user = await verifyOtp(form.email, codeToVerify); 
+      console.log('OTP verification successful:', user);
       navigate('/businesses'); 
     }
-    catch (err) { setError(err.response?.data?.message || 'Verification failed.'); }
+    catch (err) { 
+      console.error('OTP verification error:', err);
+      const errorMessage = err.response?.data?.message || 'Verification failed.';
+      setError(errorMessage);
+      
+      // Add helpful error messages
+      if (errorMessage.includes('Invalid or expired OTP')) {
+        setError('Invalid or expired OTP. Please check your email and try again, or request a new OTP.');
+      }
+    }
     finally { setLoading(false); }
   };
 
@@ -44,6 +57,31 @@ const Register = () => {
     setOtp(val);
     if (val.length === 6) {
       handleVerifyOtp(null, val);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    setError(''); setResendLoading(true);
+    try {
+      await register({ ...form, role: 'CUSTOMER' });
+      setError(''); // Clear any existing errors
+      setOtp(''); // Clear OTP input
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to resend OTP.');
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setError(''); setLoading(true);
+    try {
+      const user = await googleLogin(credentialResponse.credential);
+      navigate('/businesses');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Google Registration failed.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -114,6 +152,23 @@ const Register = () => {
                   {loading ? 'Creating…' : 'Create account'}
                 </button>
               </form>
+              
+              <div className="mt-8 flex items-center justify-center space-x-4">
+                <span className="h-px flex-1 bg-slate-200"></span>
+                <span className="text-xs font-medium text-slate-400 uppercase tracking-widest">Or continue with</span>
+                <span className="h-px flex-1 bg-slate-200"></span>
+              </div>
+
+              <div className="mt-7 flex justify-center transition-transform hover:scale-[1.02] overflow-hidden w-full max-w-[350px] mx-auto">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => setError('Google Authentication Failed.')}
+                  shape="pill"
+                  size="large"
+                  width="300"
+                />
+              </div>
+              
               <p className="text-center text-sm text-slate-500 mt-6 font-medium">Already have an account? <Link to="/login" className="text-primary-600 hover:text-primary-700 hover:underline underline-offset-4 font-bold transition-all">Sign in</Link></p>
             </>
           ) : (
@@ -135,8 +190,16 @@ const Register = () => {
                   {loading ? 'Verifying…' : 'Verify Account'}
                 </button>
               </form>
-              <div className="text-center">
-                <button type="button" onClick={() => setIsOtpSent(false)} className="text-slate-500 hover:text-slate-700 text-sm font-semibold transition-colors">← Back to Register</button>
+              <div className="text-center space-y-4">
+                <button 
+                  type="button" 
+                  onClick={handleResendOtp}
+                  disabled={resendLoading}
+                  className="text-sm text-primary-600 hover:text-primary-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {resendLoading ? 'Sending...' : "Didn't receive the code? Resend OTP"}
+                </button>
+                <button type="button" onClick={() => setIsOtpSent(false)} className="text-slate-500 hover:text-slate-700 text-sm font-semibold transition-colors block">← Back to Register</button>
               </div>
             </div>
           )}
