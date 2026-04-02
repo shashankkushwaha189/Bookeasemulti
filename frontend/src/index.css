@@ -94,7 +94,7 @@
     @apply xs:px-4 xs:py-3;
   }
   .table tbody tr { 
-    @apply hover:bg-slate-50/50 group border-b border-slate-100/50 transition-colors;
+    @apply hover:bg-slate-50/50 border-b border-slate-100/50 transition-colors;
   }
   .table tbody tr:last-child { 
     @apply border-b-0;

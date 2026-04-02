@@ -1,0 +1,58 @@
+﻿
+> bookease-pro-frontend@3.0.0 build
+> vite build
+
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+transforming...
+[32mΓ£ô[39m 5 modules transformed.
+node.exe : [31mx[39m Build failed in 857ms
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" 
+"C:\Users\shash\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: 
+([31mx    [39m Build failed in 857ms:String) 
+[], RemoteE    xception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[31merror during build:
+[31m[vite:css] [postcss] C:/Users/shash/Download
+s/BookEase-Pro/bookease-pro/frontend/src/index.cs
+s:97:5: @apply should not be used with the 
+'group' utility[31m
+file: [36mC:/Users/shash/Downloads/BookEase-Pro/
+bookease-pro/frontend/src/index.css:97:4[31m
+    at Input.error (C:\Users\shash\Downloads\Book
+Ease-Pro\bookease-pro\frontend\node_modules\postc
+ss\lib\input.js:135:16)
+    at AtRule.error (C:\Users\shash\Downloads\Boo
+kEase-Pro\bookease-pro\frontend\node_modules\post
+css\lib\node.js:146:32)
+    at processApply (C:\Users\shash\Downloads\Boo
+kEase-Pro\bookease-pro\frontend\node_modules\tail
+windcss\lib\lib\expandApplyAtRules.js:377:29)
+    at C:\Users\shash\Downloads\BookEase-Pro\book
+ease-pro\frontend\node_modules\tailwindcss\lib\li
+b\expandApplyAtRules.js:551:9
+    at C:\Users\shash\Downloads\BookEase-Pro\book
+ease-pro\frontend\node_modules\tailwindcss\lib\pr
+ocessTailwindFeatures.js:55:50
+    at async plugins (C:\Users\shash\Downloads\Bo
+okEase-Pro\bookease-pro\frontend\node_modules\tai
+lwindcss\lib\plugin.js:38:17)
+    at async LazyResult.runAsync (C:\Users\shash\
+Downloads\BookEase-Pro\bookease-pro\frontend\node
+_modules\postcss\lib\lazy-result.js:293:11)
+    at async compileCSS (file:///C:/Users/shash/D
+ownloads/BookEase-Pro/bookease-pro/frontend/node_
+modules/vite/dist/node/chunks/dep-BK3b2jBa.js:368
+98:21)
+    at async Object.transform (file:///C:/Users/s
+hash/Downloads/BookEase-Pro/bookease-pro/frontend
+/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.
+js:36171:11)
+    at async transform (file:///C:/Users/shash/Do
+wnloads/BookEase-Pro/bookease-pro/frontend/node_m
+odules/rollup/dist/es/shared/node-entry.js:21269:
+16)[39m
