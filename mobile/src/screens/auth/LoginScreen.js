@@ -39,7 +39,12 @@ const LoginScreen = ({ navigation }) => {
     try {
       const result = await login(email, password);
       if (!result.success) {
-        setError(result.error || 'Login failed.');
+        if (result.unverified) {
+          // Navigate directly to OTP input within the Register screen
+          navigation.navigate('Register', { email, requireVerification: true });
+        } else {
+          setError(result.error || 'Login failed.');
+        }
       }
     } catch (error) {
       setError('An unexpected error occurred');

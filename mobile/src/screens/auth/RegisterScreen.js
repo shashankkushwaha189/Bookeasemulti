@@ -20,13 +20,18 @@ GoogleSignin.configure({
 
 const primaryColor = '#2563eb'; // blue-600
 
-const RegisterScreen = ({ navigation }) => {
-  const [form, setForm] = useState({ name: '', email: '', password: '', phone: '' });
+const RegisterScreen = ({ navigation, route }) => {
+  const [form, setForm] = useState({ 
+    name: '', 
+    email: route?.params?.email || '', 
+    password: '', 
+    phone: '' 
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isOtpSent, setIsOtpSent] = useState(route?.params?.requireVerification || false);
   const [otp, setOtp] = useState('');
   const [resendLoading, setResendLoading] = useState(false);
   const { register, verifyOtp, googleLogin, triggerNavigation } = useAuth();
