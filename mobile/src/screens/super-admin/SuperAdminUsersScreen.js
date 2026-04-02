@@ -15,8 +15,10 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { superAdminAPI } from '../../api';
-
+import { useAuth } from '../../contexts/AuthContext';
 import PageLoader from '../../components/PageLoader';
+import { rf, rw, PAGE_PADDING, KAV_BEHAVIOR } from '../../config/responsive';
+
 
 const primaryColor = '#2563eb';
 
@@ -261,7 +263,7 @@ const SuperAdminUsersScreen = () => {
 
       <Modal visible={editModal} animationType="slide" transparent={true}>
         <KeyboardAvoidingView 
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior={KAV_BEHAVIOR}
           style={styles.modalOverlay}
         >
           <View style={styles.modalContent}>
@@ -328,7 +330,7 @@ const SuperAdminUsersScreen = () => {
       {/* Password Reset Modal */}
       <Modal visible={showPasswordReset} animationType="slide" transparent={true}>
         <KeyboardAvoidingView 
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior={KAV_BEHAVIOR}
           style={styles.modalOverlay}
         >
           <View style={styles.modalContent}>
@@ -402,22 +404,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#eff6ff',
   },
   list: {
-    padding: 20,
+    padding: PAGE_PADDING,
     paddingBottom: 40,
   },
   headerArea: {
     marginBottom: 16,
   },
   pageTitle: {
-    fontSize: 28,
+    fontSize: rf(24),
     fontWeight: '800',
     color: '#0f172a',
   },
   pageSubtitle: {
-    fontSize: 14,
+    fontSize: rf(13),
     color: '#64748b',
     marginTop: 4,
-    marginBottom: 20,
+    marginBottom: rw(16),
   },
   controlsRow: {
     marginBottom: 8,

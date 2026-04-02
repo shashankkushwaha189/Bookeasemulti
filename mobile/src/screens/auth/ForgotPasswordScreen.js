@@ -7,16 +7,17 @@ import {
   StyleSheet,
   ActivityIndicator,
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
+  StatusBar,
 } from 'react-native';
 import { EyeIcon, EyeSlashIcon, LockClosedIcon } from 'react-native-heroicons/outline';
 import { authAPI } from '../../api';
+import { rf, rw, PAGE_PADDING, KAV_BEHAVIOR, isSmallScreen } from '../../config/responsive';
 
-const primaryColor = '#2563eb'; // blue-600
+const primaryColor = '#2563eb';
 
 const ForgotPasswordScreen = ({ navigation }) => {
-  const [step, setStep] = useState(1); // 1: Email, 2: OTP & New Password
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -32,7 +33,6 @@ const ForgotPasswordScreen = ({ navigation }) => {
       setError('Please enter your email address');
       return;
     }
-
     setLoading(true);
     try {
       const res = await authAPI.forgotPassword({ email });
@@ -56,7 +56,6 @@ const ForgotPasswordScreen = ({ navigation }) => {
       setError('Password must be at least 6 characters.');
       return;
     }
-
     setLoading(true);
     try {
       const res = await authAPI.resetPassword({ email, otp, newPassword });
@@ -70,24 +69,26 @@ const ForgotPasswordScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
+    <KeyboardAvoidingView style={styles.container} behavior={KAV_BEHAVIOR}>
+      <StatusBar barStyle="dark-content" backgroundColor="#eff6ff" />
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.card}>
           <View style={styles.header}>
             <View style={styles.logo}>
-              <LockClosedIcon size={32} color="#ffffff" />
+              <LockClosedIcon size={rw(28)} color="#ffffff" />
             </View>
             <Text style={styles.title}>
-              {step === 1 ? 'Forgot Password' : 'Enter OTP & New Password'}
+              {step === 1 ? 'Forgot Password' : 'Reset Password'}
             </Text>
             <Text style={styles.subtitle}>
-              {step === 1 ? 'We will send you an OTP' : 'Enter code and new password'}
+              {step === 1 ? 'We\'ll send a verification code to your email' : 'Enter the code and your new password'}
             </Text>
           </View>
-          
+
           {error ? (
             <View style={styles.errorContainer}>
               <Text style={styles.errorText}>{error}</Text>
@@ -116,11 +117,11 @@ const ForgotPasswordScreen = ({ navigation }) => {
                   />
                 </View>
 
-                <TouchableOpacity 
-                  style={[styles.button, loading && styles.buttonDisabled]} 
+                <TouchableOpacity
+                  style={[styles.button, loading && styles.buttonDisabled]}
                   onPress={handleSendOtp}
                   disabled={loading}
-                  activeOpacity={0.8}
+                  activeOpacity={0.85}
                 >
                   {loading ? (
                     <ActivityIndicator color="#fff" size="small" />
@@ -134,14 +135,11 @@ const ForgotPasswordScreen = ({ navigation }) => {
                 <View style={styles.inputGroup}>
                   <Text style={styles.label}>6-Digit OTP</Text>
                   <TextInput
-                    style={[styles.input, { textAlign: 'center', fontSize: 20, letterSpacing: 8, marginTop: 12 }]}
+                    style={[styles.input, styles.otpInput]}
                     placeholder="------"
                     maxLength={6}
                     value={otp}
-                    onChangeText={(val) => {
-                      const numericVal = val.replace(/\D/g, '');
-                      setOtp(numericVal);
-                    }}
+                    onChangeText={(val) => setOtp(val.replace(/\D/g, ''))}
                     keyboardType="number-pad"
                   />
                 </View>
@@ -150,30 +148,31 @@ const ForgotPasswordScreen = ({ navigation }) => {
                   <Text style={styles.label}>New Password</Text>
                   <View style={styles.passwordContainer}>
                     <TextInput
-                      style={[styles.input, { flex: 1, marginBottom: 0 }]}
+                      style={[styles.input, styles.passwordInput]}
                       placeholder="Min 6 characters"
                       value={newPassword}
                       onChangeText={setNewPassword}
                       secureTextEntry={!showPassword}
                     />
-                    <TouchableOpacity 
-                      style={styles.eyeIcon} 
+                    <TouchableOpacity
+                      style={styles.eyeIcon}
                       onPress={() => setShowPassword(!showPassword)}
+                      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                     >
                       {showPassword ? (
-                        <EyeIcon size={20} color="#94a3b8" />
+                        <EyeIcon size={rw(20)} color="#94a3b8" />
                       ) : (
-                        <EyeSlashIcon size={20} color="#94a3b8" />
+                        <EyeSlashIcon size={rw(20)} color="#94a3b8" />
                       )}
                     </TouchableOpacity>
                   </View>
                 </View>
 
-                <TouchableOpacity 
-                  style={[styles.button, loading && styles.buttonDisabled]} 
+                <TouchableOpacity
+                  style={[styles.button, (loading || otp.length < 6) && styles.buttonDisabled]}
                   onPress={handleResetPassword}
                   disabled={loading || otp.length < 6}
-                  activeOpacity={0.8}
+                  activeOpacity={0.85}
                 >
                   {loading ? (
                     <ActivityIndicator color="#fff" size="small" />
@@ -184,7 +183,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
                 <View style={styles.backContainer}>
                   <TouchableOpacity onPress={() => setStep(1)}>
-                    <Text style={styles.backText}>← Back</Text>
+                    <Text style={styles.backText}>← Back to email</Text>
                   </TouchableOpacity>
                 </View>
               </>
@@ -210,33 +209,34 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
-    padding: 16,
+    padding: PAGE_PADDING,
+    paddingVertical: rw(24),
   },
   card: {
     backgroundColor: '#ffffff',
-    borderRadius: 24,
-    padding: 24,
+    borderRadius: rw(24),
+    padding: rw(isSmallScreen ? 18 : 24),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 4,
     width: '100%',
-    maxWidth: 400,
+    maxWidth: 440,
     alignSelf: 'center',
   },
   header: {
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: rw(24),
   },
   logo: {
-    width: 64,
-    height: 64,
+    width: rw(60),
+    height: rw(60),
     backgroundColor: primaryColor,
-    borderRadius: 18,
+    borderRadius: rw(16),
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: rw(14),
     shadowColor: primaryColor,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.35,
@@ -244,89 +244,96 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   title: {
-    fontSize: 26,
+    fontSize: rf(22),
     fontWeight: '800',
     color: '#0f172a',
-    marginBottom: 4,
+    marginBottom: rw(6),
+    textAlign: 'center',
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: rf(13),
     color: '#64748b',
     textAlign: 'center',
+    lineHeight: rf(19),
+    paddingHorizontal: rw(8),
   },
   errorContainer: {
     backgroundColor: '#fef2f2',
     borderWidth: 1,
     borderColor: '#fecaca',
     borderRadius: 8,
-    padding: 12,
-    marginBottom: 20,
+    padding: rw(12),
+    marginBottom: rw(16),
+  },
+  errorText: {
+    color: '#b91c1c',
+    fontSize: rf(13),
+    lineHeight: rf(18),
   },
   successContainer: {
     backgroundColor: '#ecfdf5',
     borderWidth: 1,
     borderColor: '#a7f3d0',
     borderRadius: 8,
-    padding: 12,
-    marginBottom: 20,
+    padding: rw(12),
+    marginBottom: rw(16),
   },
   successText: {
     color: '#059669',
-    fontSize: 14,
-  },
-  passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  eyeIcon: {
-    position: 'absolute',
-    right: 16,
-    padding: 4,
-  },
-  backContainer: {
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  backText: {
-    color: '#64748b',
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  linkText: {
-    color: primaryColor,
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: rf(13),
   },
   form: {
     width: '100%',
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: rw(16),
   },
   label: {
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '500',
     color: '#334155',
-    marginBottom: 8,
+    marginBottom: rw(6),
   },
   input: {
     backgroundColor: '#f8fafc',
     borderWidth: 1,
     borderColor: '#e2e8f0',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 16,
+    borderRadius: rw(12),
+    paddingHorizontal: rw(14),
+    paddingVertical: rw(13),
+    fontSize: rf(15),
     color: '#0f172a',
     width: '100%',
   },
+  otpInput: {
+    textAlign: 'center',
+    fontSize: rf(24),
+    letterSpacing: rw(8),
+    marginTop: rw(8),
+    fontWeight: '700',
+    color: primaryColor,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  passwordInput: {
+    flex: 1,
+    marginBottom: 0,
+    paddingRight: rw(44),
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: rw(14),
+    padding: 4,
+  },
   button: {
     backgroundColor: primaryColor,
-    borderRadius: 12,
-    paddingVertical: 16,
+    borderRadius: rw(12),
+    paddingVertical: rw(15),
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 8,
+    marginTop: rw(4),
     shadowColor: primaryColor,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
@@ -342,18 +349,27 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#ffffff',
-    fontSize: 16,
+    fontSize: rf(15),
     fontWeight: '600',
+  },
+  backContainer: {
+    alignItems: 'center',
+    marginTop: rw(14),
+  },
+  backText: {
+    color: '#64748b',
+    fontSize: rf(13),
+    fontWeight: '500',
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 24,
+    marginTop: rw(22),
   },
   linkText: {
     color: primaryColor,
-    fontSize: 14,
+    fontSize: rf(13),
     fontWeight: '600',
   },
 });

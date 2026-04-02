@@ -16,6 +16,7 @@ import { getCategoryIcon } from '../../config/categories';
 import { useNavigation } from '@react-navigation/native';
 import { ArrowRightOnRectangleIcon } from 'react-native-heroicons/outline';
 import { useAuth } from '../../contexts/AuthContext';
+import { rf, rw, PAGE_PADDING, isSmallScreen } from '../../config/responsive';
 
 const primaryColor = '#2563eb'; // blue-600
 
@@ -110,14 +111,14 @@ const BusinessListScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={[styles.header, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }]}>
-        <View style={{ flex: 1, paddingRight: 12 }}>
+      <View style={styles.header}>
+        <View style={styles.headerText}>
           <Text style={styles.title}>Find & Book</Text>
           <Text style={styles.subtitle}>Browse businesses and book appointments instantly</Text>
         </View>
-        <TouchableOpacity onPress={logout} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: '#fee2e2', borderRadius: 8 }}>
-          <ArrowRightOnRectangleIcon size={20} color="#ef4444" />
-          <Text style={{ color: '#ef4444', fontWeight: 'bold', fontSize: 14 }}>Logout</Text>
+        <TouchableOpacity onPress={logout} style={styles.logoutBtn}>
+          <ArrowRightOnRectangleIcon size={rw(18)} color="#ef4444" />
+          {!isSmallScreen && <Text style={styles.logoutText}>Logout</Text>}
         </TouchableOpacity>
       </View>
 
@@ -178,17 +179,39 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8fafc',
   },
   header: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    paddingHorizontal: PAGE_PADDING,
+    paddingTop: rw(16),
+    paddingBottom: rw(12),
+  },
+  headerText: {
+    flex: 1,
+    paddingRight: rw(10),
+  },
+  logoutBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: rw(10),
+    paddingVertical: rw(8),
+    backgroundColor: '#fee2e2',
+    borderRadius: 8,
+    gap: 4,
+  },
+  logoutText: {
+    color: '#ef4444',
+    fontWeight: '700',
+    fontSize: rf(13),
+    marginLeft: 4,
   },
   title: {
-    fontSize: 28,
+    fontSize: rf(24),
     fontWeight: '800',
     color: '#0f172a',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: rf(13),
     color: '#64748b',
     marginTop: 4,
   },

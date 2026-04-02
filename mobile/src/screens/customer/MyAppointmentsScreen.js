@@ -16,6 +16,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { ArrowRightOnRectangleIcon, CalendarIcon } from 'react-native-heroicons/outline';
 import PageLoader from '../../components/PageLoader';
+import { rf, rw, PAGE_PADDING, isSmallScreen } from '../../config/responsive';
 
 const primaryColor = '#2563eb'; // blue-600
 
@@ -192,31 +193,39 @@ const MyAppointmentsScreen = () => {
         ListHeaderComponent={
           <View>
             <View style={styles.headerRow}>
-              <View style={{ flex: 1 }}>
+              <View style={styles.headerTitleBox}>
                 <Text style={styles.title}>My Appointments</Text>
                 <Text style={styles.subtitle}>All your bookings across businesses</Text>
               </View>
-              <TouchableOpacity onPress={logout} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: '#fee2e2', borderRadius: 8, marginRight: 12 }}>
-                <ArrowRightOnRectangleIcon size={20} color="#ef4444" />
-                <Text style={{ color: '#ef4444', fontWeight: 'bold', fontSize: 14 }}>Logout</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.headerBookBtn} onPress={() => navigation.navigate('Browse')}>
-                <Text style={styles.headerBookBtnText}>+ Book New</Text>
-              </TouchableOpacity>
+              <View style={styles.headerActions}>
+                <TouchableOpacity onPress={logout} style={styles.logoutBtn}>
+                  <ArrowRightOnRectangleIcon size={rw(16)} color="#ef4444" />
+                  {!isSmallScreen && <Text style={styles.logoutText}>Logout</Text>}
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.headerBookBtn} onPress={() => navigation.navigate('Browse')}>
+                  <Text style={styles.headerBookBtnText}>+ Book</Text>
+                </TouchableOpacity>
+              </View>
             </View>
 
             <View style={styles.statsContainer}>
-              <View style={[styles.statCard, { borderColor: '#e2e8f0' }]}>
-                <Text style={[styles.statNumber, { color: '#0f172a' }]}>{stats.total}</Text>
-                <Text style={styles.statLabel}>Total</Text>
+              <View style={[styles.statCard]}>
+                <View style={[styles.statCardInner, { borderColor: '#e2e8f0' }]}>
+                  <Text style={[styles.statNumber, { color: '#0f172a' }]}>{stats.total}</Text>
+                  <Text style={styles.statLabel}>Total</Text>
+                </View>
               </View>
-              <View style={[styles.statCard, { borderColor: '#bfdbfe' }]}>
-                <Text style={[styles.statNumber, { color: primaryColor }]}>{stats.upcoming}</Text>
-                <Text style={styles.statLabel}>Upcoming</Text>
+              <View style={[styles.statCard]}>
+                <View style={[styles.statCardInner, { borderColor: '#bfdbfe' }]}>
+                  <Text style={[styles.statNumber, { color: primaryColor }]}>{stats.upcoming}</Text>
+                  <Text style={styles.statLabel}>Upcoming</Text>
+                </View>
               </View>
-              <View style={[styles.statCard, { borderColor: '#bbf7d0' }]}>
-                <Text style={[styles.statNumber, { color: '#16a34a' }]}>{stats.completed}</Text>
-                <Text style={styles.statLabel}>Completed</Text>
+              <View style={[styles.statCard]}>
+                <View style={[styles.statCardInner, { borderColor: '#bbf7d0' }]}>
+                  <Text style={[styles.statNumber, { color: '#16a34a' }]}>{stats.completed}</Text>
+                  <Text style={styles.statLabel}>Completed</Text>
+                </View>
               </View>
             </View>
 
@@ -268,29 +277,54 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
   list: {
-    padding: 20,
+    padding: PAGE_PADDING,
     paddingBottom: 40,
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: rw(20),
+  },
+  headerTitleBox: {
+    flex: 1,
+    paddingRight: rw(8),
+  },
+  headerActions: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 24,
+    gap: 6,
+    flexShrink: 0,
+  },
+  logoutBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: rw(8),
+    paddingVertical: rw(7),
+    backgroundColor: '#fee2e2',
+    borderRadius: 8,
+    gap: 4,
+  },
+  logoutText: {
+    color: '#ef4444',
+    fontWeight: '700',
+    fontSize: rf(12),
+    marginLeft: 2,
   },
   title: {
-    fontSize: 28,
+    fontSize: rf(22),
     fontWeight: '800',
     color: '#0f172a',
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: rf(12),
     color: '#64748b',
     marginTop: 4,
   },
   headerBookBtn: {
     backgroundColor: primaryColor,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingHorizontal: rw(10),
+    paddingVertical: rw(7),
     borderRadius: 8,
     shadowColor: primaryColor,
     shadowOffset: { width: 0, height: 2 },
@@ -300,19 +334,22 @@ const styles = StyleSheet.create({
   },
   headerBookBtnText: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: rf(13),
     fontWeight: '600',
   },
   statsContainer: {
     flexDirection: 'row',
-    gap: 12,
-    marginBottom: 24,
+    marginBottom: rw(20),
+    marginHorizontal: -4,
   },
   statCard: {
     flex: 1,
+    paddingHorizontal: 4,
+  },
+  statCardInner: {
     backgroundColor: '#ffffff',
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: rw(14),
     alignItems: 'center',
     borderWidth: 1,
     shadowColor: '#000',
@@ -322,12 +359,12 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   statNumber: {
-    fontSize: 24,
+    fontSize: rf(20),
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: 2,
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: rf(10),
     color: '#64748b',
     fontWeight: '500',
   },

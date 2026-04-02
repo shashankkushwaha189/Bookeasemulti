@@ -13,8 +13,9 @@ import { businessAPI, appointmentsAPI, staffAPI } from '../../api';
 import { useAuth } from '../../contexts/AuthContext';
 import { useFocusEffect } from '@react-navigation/native';
 import { getCategoryIcon } from '../../config/categories';
-import { ArrowRightOnRectangleIcon } from 'react-native-heroicons/outline';
+import { ArrowRightOnRectangleIcon, CalendarIcon, ClockIcon, UserGroupIcon, ScissorsIcon } from 'react-native-heroicons/outline';
 import PageLoader from '../../components/PageLoader';
+import { rf, rw, PAGE_PADDING, isSmallScreen } from '../../config/responsive';
 
 const primaryColor = '#2563eb'; // blue-600
 
@@ -37,13 +38,15 @@ const StatusBadge = ({ status }) => {
 }
 
 const StatCard = ({ label, value, icon, bgColor, textColor }) => (
-  <View style={[styles.statCard, { backgroundColor: bgColor }]}>
-    <View style={styles.statIconWrap}>
-      <Text style={styles.statIcon}>{icon}</Text>
-    </View>
-    <View>
-      <Text style={styles.statValue}>{value}</Text>
-      <Text style={[styles.statLabel, { color: textColor }]}>{label}</Text>
+  <View style={styles.statCard}>
+    <View style={[styles.statCardInner, { backgroundColor: bgColor }]}>
+      <View style={styles.statIconWrap}>
+        {icon}
+      </View>
+      <View>
+        <Text style={styles.statValue}>{value}</Text>
+        <Text style={[styles.statLabel, { color: textColor }]}>{label}</Text>
+      </View>
     </View>
   </View>
 );
@@ -96,14 +99,14 @@ const AdminDashboardScreen = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         
-        <View style={[styles.header, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }]}>
-          <View style={{ flex: 1, paddingRight: 12 }}>
+        <View style={styles.headerRow}>
+          <View style={styles.headerText}>
             <Text style={styles.pageTitle}>Admin Dashboard</Text>
             <Text style={styles.pageSubtitle}>Manage your business operations</Text>
           </View>
-          <TouchableOpacity onPress={logout} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: '#fee2e2', borderRadius: 8 }}>
-            <ArrowRightOnRectangleIcon size={20} color="#ef4444" />
-            <Text style={{ color: '#ef4444', fontWeight: 'bold', fontSize: 14 }}>Logout</Text>
+          <TouchableOpacity onPress={logout} style={styles.logoutBtn}>
+            <ArrowRightOnRectangleIcon size={rw(18)} color="#ef4444" />
+            {!isSmallScreen && <Text style={styles.logoutText}>Logout</Text>}
           </TouchableOpacity>
         </View>
 
@@ -118,10 +121,10 @@ const AdminDashboardScreen = () => {
         </View>
 
         <View style={styles.statsGrid}>
-          <StatCard label="Total Appointments" value={stats.appointments.length} icon="📅" bgColor="#eff6ff" textColor="#1e40af" />
-          <StatCard label="Today's Bookings"   value={todayCount}                icon="🕐" bgColor="#fffbeb" textColor="#92400e" />
-          <StatCard label="Staff Members"      value={stats.staff.length}        icon="👤" bgColor="#faf5ff" textColor="#6b21a8" />
-          <StatCard label="Services"           value={stats.services.length}     icon="✂️" bgColor="#ecfdf5" textColor="#065f46" />
+          <StatCard label="Total Appointments" value={stats.appointments.length} icon={<CalendarIcon size={24} color="#1e40af" />} bgColor="#eff6ff" textColor="#1e40af" />
+          <StatCard label="Today's Bookings"   value={todayCount}                icon={<ClockIcon size={24} color="#92400e" />} bgColor="#fffbeb" textColor="#92400e" />
+          <StatCard label="Staff Members"      value={stats.staff.length}        icon={<UserGroupIcon size={24} color="#6b21a8" />} bgColor="#faf5ff" textColor="#6b21a8" />
+          <StatCard label="Services"           value={stats.services.length}     icon={<ScissorsIcon size={24} color="#065f46" />} bgColor="#ecfdf5" textColor="#065f46" />
         </View>
 
         <View style={styles.tableCard}>
@@ -159,49 +162,61 @@ const AdminDashboardScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eff6ff', // blue-50 equivalent
-  },
-  content: {
-    padding: 20,
-    paddingBottom: 40,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#eff6ff',
   },
-  loadingText: {
-    marginTop: 12,
-    fontSize: 14,
-    color: '#64748b',
+  content: {
+    padding: PAGE_PADDING,
+    paddingBottom: 40,
   },
-  header: {
-    marginBottom: 24,
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: rw(20),
+  },
+  headerText: {
+    flex: 1,
+    paddingRight: rw(10),
+  },
+  logoutBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: rw(10),
+    paddingVertical: rw(8),
+    backgroundColor: '#fee2e2',
+    borderRadius: 8,
+    gap: 4,
+  },
+  logoutText: {
+    color: '#ef4444',
+    fontWeight: '700',
+    fontSize: rf(13),
+    marginLeft: 4,
   },
   pageTitle: {
-    fontSize: 28,
+    fontSize: rf(24),
     fontWeight: '800',
     color: '#0f172a',
   },
   pageSubtitle: {
-    fontSize: 16,
+    fontSize: rf(13),
     color: '#64748b',
     marginTop: 4,
   },
   profileBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 32,
-    gap: 12,
+    marginBottom: rw(24),
+    marginTop: 0,
   },
   profileIconBox: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
+    width: rw(50),
+    height: rw(50),
+    borderRadius: rw(14),
     backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: rw(12),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
@@ -209,29 +224,32 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   profileIconText: {
-    fontSize: 28,
+    fontSize: rf(24),
   },
   profileTitle: {
-    fontSize: 20,
+    fontSize: rf(17),
     fontWeight: '700',
     color: '#0f172a',
   },
   profileSubtitle: {
-    fontSize: 14,
+    fontSize: rf(13),
     color: '#64748b',
     marginTop: 2,
   },
   statsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
-    marginBottom: 32,
+    marginBottom: rw(24),
+    marginHorizontal: -6,
   },
   statCard: {
-    flex: 1,
-    minWidth: '45%',
+    width: '50%',
+    paddingHorizontal: 6,
+    marginBottom: 12,
+  },
+  statCardInner: {
     borderRadius: 12,
-    padding: 16,
+    padding: rw(14),
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.02)',
     shadowColor: '#000',
@@ -241,19 +259,16 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   statIconWrap: {
-    marginBottom: 8,
-  },
-  statIcon: {
-    fontSize: 20,
+    marginBottom: rw(6),
   },
   statValue: {
-    fontSize: 24,
+    fontSize: rf(22),
     fontWeight: '800',
     color: '#0f172a',
     marginBottom: 2,
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: rf(11),
     fontWeight: '500',
   },
   tableCard: {
@@ -269,14 +284,14 @@ const styles = StyleSheet.create({
     borderColor: '#f1f5f9',
   },
   tableCardHeader: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingHorizontal: rw(16),
+    paddingVertical: rw(14),
     borderBottomWidth: 1,
     borderBottomColor: '#f1f5f9',
     backgroundColor: '#ffffff',
   },
   tableCardTitle: {
-    fontSize: 16,
+    fontSize: rf(15),
     fontWeight: '600',
     color: '#1e293b',
   },
@@ -284,45 +299,45 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   tableEmpty: {
-    padding: 32,
+    padding: rw(28),
     alignItems: 'center',
   },
   tableEmptyText: {
     color: '#94a3b8',
-    fontSize: 14,
+    fontSize: rf(13),
   },
   appointmentRow: {
-    paddingVertical: 16,
-    paddingHorizontal: 16,
+    paddingVertical: rw(14),
+    paddingHorizontal: rw(14),
   },
   borderBottom: {
     borderBottomWidth: 1,
     borderBottomColor: '#f8fafc',
   },
   aptCustomer: {
-    fontSize: 15,
+    fontSize: rf(14),
     fontWeight: '600',
     color: '#0f172a',
     flex: 1,
-    marginRight: 8,
+    marginRight: rw(8),
   },
   aptService: {
-    fontSize: 13,
+    fontSize: rf(12),
     color: '#64748b',
     flex: 1,
-    marginRight: 8,
+    marginRight: rw(8),
   },
   aptDate: {
-    fontSize: 13,
+    fontSize: rf(12),
     color: '#334155',
   },
   statusBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
+    paddingHorizontal: rw(7),
+    paddingVertical: 3,
+    borderRadius: 10,
   },
   statusText: {
-    fontSize: 10,
+    fontSize: rf(10),
     fontWeight: '600',
   },
 });

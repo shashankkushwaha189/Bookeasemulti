@@ -12,8 +12,8 @@ import {
 } from 'react-native';
 import { appointmentsAPI } from '../../api';
 import { useFocusEffect } from '@react-navigation/native';
-
 import PageLoader from '../../components/PageLoader';
+import { rf, rw, PAGE_PADDING } from '../../config/responsive';
 
 const primaryColor = '#2563eb'; // blue-600
 
@@ -125,21 +125,29 @@ const AdminAppointmentsScreen = () => {
             </View>
 
             <View style={styles.statsContainer}>
-              <View style={[styles.statCard]}>
-                <Text style={[styles.statNumber, {color: '#0f172a'}]}>{statTotal}</Text>
-                <Text style={styles.statLabel}>Total</Text>
+              <View style={styles.statCard}>
+                <View style={styles.statCardInner}>
+                  <Text style={[styles.statNumber, {color: '#0f172a'}]}>{statTotal}</Text>
+                  <Text style={styles.statLabel}>Total</Text>
+                </View>
               </View>
-              <View style={[styles.statCard]}>
-                <Text style={[styles.statNumber, {color: primaryColor}]}>{statBooked}</Text>
-                <Text style={styles.statLabel}>Booked</Text>
+              <View style={styles.statCard}>
+                <View style={styles.statCardInner}>
+                  <Text style={[styles.statNumber, {color: primaryColor}]}>{statBooked}</Text>
+                  <Text style={styles.statLabel}>Booked</Text>
+                </View>
               </View>
-              <View style={[styles.statCard]}>
-                <Text style={[styles.statNumber, {color: '#16a34a'}]}>{statCompleted}</Text>
-                <Text style={styles.statLabel}>Completed</Text>
+              <View style={styles.statCard}>
+                <View style={styles.statCardInner}>
+                  <Text style={[styles.statNumber, {color: '#16a34a'}]}>{statCompleted}</Text>
+                  <Text style={styles.statLabel}>Completed</Text>
+                </View>
               </View>
-              <View style={[styles.statCard]}>
-                <Text style={[styles.statNumber, {color: '#dc2626'}]}>{statCancelled}</Text>
-                <Text style={styles.statLabel}>Cancelled</Text>
+              <View style={styles.statCard}>
+                <View style={styles.statCardInner}>
+                  <Text style={[styles.statNumber, {color: '#dc2626'}]}>{statCancelled}</Text>
+                  <Text style={styles.statLabel}>Cancelled</Text>
+                </View>
               </View>
             </View>
 
@@ -187,37 +195,40 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
   list: {
-    padding: 20,
+    padding: PAGE_PADDING,
     paddingBottom: 40,
   },
   header: {
-    marginBottom: 24,
+    marginBottom: rw(20),
   },
   title: {
-    fontSize: 28,
+    fontSize: rf(24),
     fontWeight: '800',
     color: '#0f172a',
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: rf(13),
     color: '#64748b',
     marginTop: 4,
   },
   statsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 20,
+    marginBottom: rw(16),
+    marginHorizontal: -4,
   },
   statCard: {
-    width: '48%',
+    width: '50%',
+    paddingHorizontal: 4,
+    marginBottom: 8,
+  },
+  statCardInner: {
     backgroundColor: '#ffffff',
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: rw(14),
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#e2e8f0',
-    marginBottom: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
@@ -225,17 +236,17 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   statNumber: {
-    fontSize: 24,
+    fontSize: rf(22),
     fontWeight: 'bold',
     marginBottom: 4,
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: rf(11),
     color: '#64748b',
     fontWeight: '500',
   },
   filterContainer: {
-    marginBottom: 20,
+    marginBottom: rw(16),
   },
   filterButton: {
     paddingVertical: 8,

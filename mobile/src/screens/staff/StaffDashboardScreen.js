@@ -15,6 +15,7 @@ import { staffAPI, appointmentsAPI } from '../../api';
 import { getCategoryIcon } from '../../config/categories';
 import { useAuth } from '../../contexts/AuthContext';
 import { ArrowRightOnRectangleIcon } from 'react-native-heroicons/outline';
+import { rf, rw, PAGE_PADDING, isSmallScreen } from '../../config/responsive';
 
 const primaryColor = '#2563eb'; // blue-600
 
@@ -152,25 +153,29 @@ const StaffDashboardScreen = () => {
         }
         ListHeaderComponent={
           <View>
-            <View style={[styles.header, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }]}>
-              <View style={{ flex: 1, paddingRight: 12 }}>
+            <View style={styles.header}>
+              <View style={styles.headerText}>
                 <Text style={styles.title}>My Schedule</Text>
                 <Text style={styles.subtitle}>{dateFormatted}</Text>
               </View>
-              <TouchableOpacity onPress={logout} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: '#fee2e2', borderRadius: 8 }}>
-                <ArrowRightOnRectangleIcon size={20} color="#ef4444" />
-                <Text style={{ color: '#ef4444', fontWeight: 'bold', fontSize: 14 }}>Logout</Text>
+              <TouchableOpacity onPress={logout} style={styles.logoutBtn}>
+                <ArrowRightOnRectangleIcon size={rw(18)} color="#ef4444" />
+                {!isSmallScreen && <Text style={styles.logoutText}>Logout</Text>}
               </TouchableOpacity>
             </View>
 
             <View style={styles.statsContainer}>
-              <View style={[styles.statCard]}>
-                <Text style={[styles.statNumber, {color: primaryColor}]}>{todayPending}</Text>
-                <Text style={styles.statLabel}>Pending Today</Text>
+              <View style={styles.statCard}>
+                <View style={styles.statCardInner}>
+                  <Text style={[styles.statNumber, {color: primaryColor}]}>{todayPending}</Text>
+                  <Text style={styles.statLabel}>Pending Today</Text>
+                </View>
               </View>
-              <View style={[styles.statCard]}>
-                <Text style={[styles.statNumber, {color: '#16a34a'}]}>{totalCompleted}</Text>
-                <Text style={styles.statLabel}>Completed Total</Text>
+              <View style={styles.statCard}>
+                <View style={styles.statCardInner}>
+                  <Text style={[styles.statNumber, {color: '#16a34a'}]}>{totalCompleted}</Text>
+                  <Text style={styles.statLabel}>Completed Total</Text>
+                </View>
               </View>
             </View>
 
@@ -214,32 +219,57 @@ const styles = StyleSheet.create({
     backgroundColor: '#eff6ff',
   },
   list: {
-    padding: 20,
+    padding: PAGE_PADDING,
     paddingBottom: 40,
   },
   header: {
-    marginBottom: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: rw(20),
+  },
+  headerText: {
+    flex: 1,
+    paddingRight: rw(10),
+  },
+  logoutBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: rw(10),
+    paddingVertical: rw(8),
+    backgroundColor: '#fee2e2',
+    borderRadius: 8,
+    gap: 4,
+  },
+  logoutText: {
+    color: '#ef4444',
+    fontWeight: '700',
+    fontSize: rf(13),
+    marginLeft: 4,
   },
   title: {
-    fontSize: 28,
+    fontSize: rf(24),
     fontWeight: '800',
     color: '#0f172a',
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: rf(12),
     color: '#64748b',
     marginTop: 4,
   },
   statsContainer: {
     flexDirection: 'row',
-    gap: 12,
-    marginBottom: 20,
+    marginBottom: rw(18),
+    marginHorizontal: -4,
   },
   statCard: {
     flex: 1,
+    paddingHorizontal: 4,
+  },
+  statCardInner: {
     backgroundColor: '#ffffff',
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: rw(14),
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#e2e8f0',
@@ -250,12 +280,12 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   statNumber: {
-    fontSize: 32,
+    fontSize: rf(28),
     fontWeight: 'bold',
     marginBottom: 4,
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: rf(11),
     color: '#64748b',
     fontWeight: '500',
   },

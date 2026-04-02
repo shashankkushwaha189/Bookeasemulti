@@ -17,8 +17,9 @@ import {
 import { staffAPI } from '../../api';
 import { useAuth } from '../../contexts/AuthContext';
 import { getStaffLabel } from '../../config/categories';
-
 import PageLoader from '../../components/PageLoader';
+import { rf, rw, PAGE_PADDING, KAV_BEHAVIOR } from '../../config/responsive';
+
 
 const primaryColor = '#2563eb'; // blue-600
 
@@ -184,7 +185,7 @@ const AdminStaffScreen = () => {
 
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <KeyboardAvoidingView 
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior={KAV_BEHAVIOR}
           style={styles.modalOverlay}
         >
           <View style={styles.modalContent}>
@@ -287,29 +288,29 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
   list: {
-    padding: 20,
+    padding: PAGE_PADDING,
     paddingBottom: 40,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: rw(20),
   },
   title: {
-    fontSize: 28,
+    fontSize: rf(24),
     fontWeight: '800',
     color: '#0f172a',
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: rf(13),
     color: '#64748b',
     marginTop: 4,
   },
   headerAddBtn: {
     backgroundColor: primaryColor,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingHorizontal: rw(12),
+    paddingVertical: rw(8),
     borderRadius: 8,
     shadowColor: primaryColor,
     shadowOffset: { width: 0, height: 2 },
@@ -319,7 +320,7 @@ const styles = StyleSheet.create({
   },
   headerAddBtnText: {
     color: '#ffffff',
-    fontSize: 14,
+    fontSize: rf(13),
     fontWeight: '600',
   },
   card: {

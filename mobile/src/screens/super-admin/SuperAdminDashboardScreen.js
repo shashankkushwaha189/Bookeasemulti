@@ -14,17 +14,20 @@ import { getCategoryIcon } from '../../config/categories';
 import { useAuth } from '../../contexts/AuthContext';
 import { ArrowRightOnRectangleIcon } from 'react-native-heroicons/outline';
 import { useNavigation } from '@react-navigation/native';
+import { rf, rw, PAGE_PADDING, isSmallScreen } from '../../config/responsive';
 
 const primaryColor = '#2563eb'; // blue-600
 
 const StatCard = ({ label, value, icon, bgColor, textColor }) => (
-  <View style={[styles.statCard, { backgroundColor: bgColor }]}>
-    <View style={styles.statIconWrap}>
-      <Text style={styles.statIcon}>{icon}</Text>
-    </View>
-    <View>
-      <Text style={styles.statValue}>{value}</Text>
-      <Text style={[styles.statLabel, { color: textColor }]}>{label}</Text>
+  <View style={styles.statCard}>
+    <View style={[styles.statCardInner, { backgroundColor: bgColor }]}>
+      <View style={styles.statIconWrap}>
+        <Text style={styles.statIcon}>{icon}</Text>
+      </View>
+      <View>
+        <Text style={styles.statValue}>{value}</Text>
+        <Text style={[styles.statLabel, { color: textColor }]}>{label}</Text>
+      </View>
     </View>
   </View>
 );
@@ -89,14 +92,14 @@ const SuperAdminDashboardScreen = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         
-        <View style={[styles.header, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }]}>
-          <View style={{ flex: 1, paddingRight: 12 }}>
+        <View style={styles.headerRow}>
+          <View style={styles.headerText}>
             <Text style={styles.pageTitle}>Super Admin</Text>
             <Text style={styles.pageSubtitle}>System-wide aggregate overview</Text>
           </View>
-          <TouchableOpacity onPress={logout} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, backgroundColor: '#fee2e2', borderRadius: 8 }}>
-            <ArrowRightOnRectangleIcon size={20} color="#ef4444" />
-            <Text style={{ color: '#ef4444', fontWeight: 'bold', fontSize: 14 }}>Logout</Text>
+          <TouchableOpacity onPress={logout} style={styles.logoutBtn}>
+            <ArrowRightOnRectangleIcon size={rw(18)} color="#ef4444" />
+            {!isSmallScreen && <Text style={styles.logoutText}>Logout</Text>}
           </TouchableOpacity>
         </View>
 
@@ -232,39 +235,58 @@ const styles = StyleSheet.create({
     backgroundColor: '#eff6ff',
   },
   content: {
-    padding: 20,
+    padding: PAGE_PADDING,
     paddingBottom: 40,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#eff6ff',
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: rw(20),
   },
-  header: {
-    marginBottom: 24,
+  headerText: {
+    flex: 1,
+    paddingRight: rw(10),
+  },
+  logoutBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: rw(10),
+    paddingVertical: rw(8),
+    backgroundColor: '#fee2e2',
+    borderRadius: 8,
+    gap: 4,
+  },
+  logoutText: {
+    color: '#ef4444',
+    fontWeight: '700',
+    fontSize: rf(13),
+    marginLeft: 4,
   },
   pageTitle: {
-    fontSize: 28,
+    fontSize: rf(24),
     fontWeight: '800',
     color: '#0f172a',
   },
   pageSubtitle: {
-    fontSize: 14,
+    fontSize: rf(13),
     color: '#64748b',
     marginTop: 4,
   },
   statsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
-    marginBottom: 24,
+    marginBottom: rw(20),
+    marginHorizontal: -6,
   },
   statCard: {
-    flex: 1,
-    minWidth: '45%',
+    width: '50%',
+    paddingHorizontal: 6,
+    marginBottom: 12,
+  },
+  statCardInner: {
     borderRadius: 16,
-    padding: 20,
+    padding: rw(16),
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.02)',
     shadowColor: '#000',
@@ -274,19 +296,19 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   statIconWrap: {
-    marginBottom: 12,
+    marginBottom: rw(10),
   },
   statIcon: {
-    fontSize: 24,
+    fontSize: rf(22),
   },
   statValue: {
-    fontSize: 28,
+    fontSize: rf(24),
     fontWeight: '800',
     color: '#0f172a',
     marginBottom: 4,
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: rf(10),
     fontWeight: '600',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
