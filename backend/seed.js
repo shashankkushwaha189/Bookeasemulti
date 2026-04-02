@@ -9,12 +9,14 @@ const seed = async () => {
     console.log('✅ Tables ready.');
 
     // Super Admin
-    const existing = await User.findOne({ where: { email: 'superadmin@bookease.com' } });
+    const superAdminEmail = 'shashankkushwaha189@gmail.com';
+    const existing = await User.findOne({ where: { email: superAdminEmail } });
     if (!existing) {
-      await User.create({ email: 'superadmin@bookease.com', password: 'admin123', role: 'SUPER_ADMIN', business_id: null });
-      console.log('✅ Super Admin created → superadmin@bookease.com / admin123');
+      await User.create({ email: superAdminEmail, password: 'admin123', role: 'SUPER_ADMIN', business_id: null, is_verified: true });
+      console.log(`✅ Super Admin created → ${superAdminEmail} / admin123`);
     } else {
-      console.log('⚠️  Super Admin already exists.');
+      await existing.update({ role: 'SUPER_ADMIN', is_verified: true, business_id: null, password: 'admin123' });
+      console.log(`⚠️  Super Admin already exists. Promoted to SUPER_ADMIN and password reset for ${superAdminEmail}`);
     }
 
     // Sample businesses
@@ -36,7 +38,7 @@ const seed = async () => {
     }
 
     console.log('\n🎉 Seed complete!');
-    console.log('   Login: superadmin@bookease.com / admin123');
+    console.log(`   Login: ${superAdminEmail} / admin123`);
     console.log('   Then create admins for each business from Super Admin panel.\n');
     process.exit(0);
   } catch (err) { console.error('❌ Seed failed:', err.message); process.exit(1); }
