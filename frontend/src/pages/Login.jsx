@@ -98,13 +98,13 @@ const Login = () => {
             <span className="h-px flex-1 bg-slate-200"></span>
           </div>
 
-          <div className="mt-7 flex justify-center [&>div]:w-full [&>div>div]:w-full transition-transform hover:scale-[1.02]">
+          <div className="mt-7 flex justify-center transition-transform hover:scale-[1.02] overflow-hidden w-full max-w-[350px] mx-auto">
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
               onError={() => setError('Google Authentication Failed.')}
               shape="pill"
               size="large"
-              width="350"
+              width="300"
             />
           </div>
           <p className="text-center text-sm xs:text-xs text-slate-500 mt-8 font-medium">New to BookEase? <Link to="/register" className="text-primary-600 hover:text-primary-700 hover:underline underline-offset-4 font-bold transition-all">Create an account</Link></p>
