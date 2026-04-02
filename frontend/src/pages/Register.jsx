@@ -22,19 +22,29 @@ const Register = () => {
     finally { setLoading(false); }
   };
 
-  const handleVerifyOtp = async (e) => {
-    e.preventDefault(); setError(''); setLoading(true);
-    if (otp.length !== 6) {
+  const handleVerifyOtp = async (e, directOtp = null) => {
+    if (e) e.preventDefault(); 
+    setError(''); setLoading(true);
+    const codeToVerify = directOtp || otp;
+    if (codeToVerify.length !== 6) {
       setError('Please enter the 6-digit code.');
       setLoading(false);
       return;
     }
     try { 
-      await verifyOtp(form.email, otp); 
+      await verifyOtp(form.email, codeToVerify); 
       navigate('/businesses'); 
     }
     catch (err) { setError(err.response?.data?.message || 'Verification failed.'); }
     finally { setLoading(false); }
+  };
+
+  const handleOtpChange = (e) => {
+    const val = e.target.value.replace(/\D/g, '');
+    setOtp(val);
+    if (val.length === 6) {
+      handleVerifyOtp(null, val);
+    }
   };
 
   return (
@@ -100,7 +110,7 @@ const Register = () => {
                     placeholder="000000" 
                     maxLength={6}
                     value={otp} 
-                    onChange={e => setOtp(e.target.value.replace(/\D/g, ''))} 
+                    onChange={handleOtpChange} 
                     required 
                   />
                 </div>
