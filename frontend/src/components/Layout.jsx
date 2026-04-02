@@ -2,23 +2,35 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../routes/AuthContext';
 import { getCategoryIcon } from '../config/categories';
 import { useState } from 'react';
+import {
+  ChartPieIcon,
+  BuildingOfficeIcon,
+  UsersIcon,
+  ScissorsIcon,
+  UserIcon,
+  CalendarDaysIcon,
+  MagnifyingGlassIcon,
+  QueueListIcon,
+  Bars3Icon,
+  BriefcaseIcon
+} from '@heroicons/react/24/outline';
 
 const navLinks = {
   SUPER_ADMIN: [
-    { to: '/super-admin/dashboard', label: 'Dashboard',  icon: '📊' },
-    { to: '/super-admin/businesses',label: 'Businesses', icon: '🏢' },
-    { to: '/super-admin/users',     label: 'Users',      icon: '👥' },
+    { to: '/super-admin/dashboard', label: 'Dashboard',  icon: ChartPieIcon },
+    { to: '/super-admin/businesses',label: 'Businesses', icon: BuildingOfficeIcon },
+    { to: '/super-admin/users',     label: 'Users',      icon: UsersIcon },
   ],
   ADMIN: [
-    { to: '/admin/dashboard',    label: 'Dashboard',    icon: '📊' },
-    { to: '/admin/services',     label: 'Services',     icon: '✂️'  },
-    { to: '/admin/staff',        label: 'Staff',        icon: '👤' },
-    { to: '/admin/appointments', label: 'Appointments', icon: '📅' },
+    { to: '/admin/dashboard',    label: 'Dashboard',    icon: ChartPieIcon },
+    { to: '/admin/services',     label: 'Services',     icon: ScissorsIcon  },
+    { to: '/admin/staff',        label: 'Staff',        icon: UserIcon },
+    { to: '/admin/appointments', label: 'Appointments', icon: CalendarDaysIcon },
   ],
-  STAFF: [{ to: '/staff/dashboard', label: 'My Schedule', icon: '📋' }],
+  STAFF: [{ to: '/staff/dashboard', label: 'My Schedule', icon: QueueListIcon }],
   CUSTOMER: [
-    { to: '/businesses',      label: 'Browse',          icon: '🔍' },
-    { to: '/my-appointments', label: 'My Appointments', icon: '🗂️' },
+    { to: '/businesses',      label: 'Browse',          icon: MagnifyingGlassIcon },
+    { to: '/my-appointments', label: 'My Appointments', icon: QueueListIcon },
   ],
 };
 
@@ -52,61 +64,70 @@ const Layout = ({ children }) => {
       {/* Mobile menu button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className={`fixed top-3 left-3 z-50 p-1.5 bg-white rounded-lg shadow-md border border-slate-200 flex sm:hidden transition-opacity duration-300 ${
-          sidebarOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        className={`fixed top-3 left-3 z-50 p-2 bg-white/80 backdrop-blur-md rounded-xl shadow-sm border border-slate-200/60 flex sm:hidden transition-all duration-300 hover:bg-white ${
+          sidebarOpen ? 'opacity-0 pointer-events-none translate-x-[-20px]' : 'opacity-100 translate-x-0'
         }`}
         style={{ zIndex: 60 }}
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
+        <Bars3Icon className="w-5 h-5 text-slate-700" />
       </button>
 
-      <aside className={`w-64 bg-white border-r border-slate-200 flex flex-col fixed sm:relative h-full sm:h-auto transform transition-transform duration-300 ease-in-out ${
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      <aside className={`w-72 bg-white/70 backdrop-blur-2xl border-r border-slate-200/50 flex flex-col fixed sm:relative h-full sm:h-auto transform transition-all duration-400 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
+        sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full shadow-none'
       } sm:translate-x-0`} style={{ zIndex: 55 }}>
-        <div className="p-6 xs:p-4 border-b border-slate-100">
-          <div className="flex items-center gap-3 xs:gap-2">
-            <div className="w-9 h-9 xs:w-8 xs:h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold text-lg xs:text-sm">B</div>
+        <div className="p-7 xs:p-5 border-b border-slate-200/50 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+          
+          <div className="flex items-center gap-4 xs:gap-3 relative z-10">
+            <div className="w-10 h-10 xs:w-9 xs:h-9 bg-gradient-to-br from-primary-600 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl xs:text-base shadow-lg shadow-primary-500/30">B</div>
             <div>
-              <h1 className="font-bold text-slate-900 text-lg xs:text-base leading-none">BookEase</h1>
-              <p className="text-xs text-slate-400 mt-0.5 truncate max-w-[130px] xs:max-w-[100px]">
-                {user?.businessName ? businessIcon + ' ' + user.businessName : 'All Businesses'}
-              </p>
+              <h1 className="font-extrabold text-slate-900 text-xl xs:text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700">BookEase</h1>
+              <div className="flex items-center gap-1 mt-0.5 opacity-80">
+                <BriefcaseIcon className="w-3.5 h-3.5 text-slate-500" />
+                <p className="text-xs font-medium text-slate-500 truncate max-w-[140px] xs:max-w-[120px]">
+                  {user?.businessName ? user.businessName : 'All Businesses'}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-        <nav className="flex-1 px-3 py-4 xs:px-2 xs:py-3 space-y-1 overflow-y-auto">
+        <nav className="flex-1 px-4 py-6 xs:px-3 xs:py-4 space-y-1.5 overflow-y-auto">
           {links.map((link) => {
             const active = location.pathname === link.to;
+            const Icon = link.icon;
             return (
               <Link key={link.to} to={link.to}
                 onClick={() => setSidebarOpen(false)}
-                className={'flex items-center gap-3 px-3 py-2.5 xs:px-2 xs:py-2 rounded-lg text-sm font-medium transition-all ' +
-                  (active ? 'bg-primary-50 text-primary-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900')}>
-                <span className="text-base xs:text-sm">{link.icon}</span>
-                <span className="xs:text-xs">{link.label}</span>
+                className={`group flex items-center gap-3.5 px-3 py-2.5 xs:px-2.5 xs:py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                  active 
+                    ? 'bg-primary-50 text-primary-700 shadow-sm border border-primary-100/50' 
+                    : 'text-slate-600 hover:bg-slate-100/60 hover:text-slate-900 border border-transparent'
+                }`}>
+                <Icon className={`w-[22px] h-[22px] flex-shrink-0 transition-colors ${active ? 'text-primary-600' : 'text-slate-400 group-hover:text-slate-600'}`} strokeWidth={active ? 2 : 1.5} />
+                <span className="xs:text-sm tracking-tight">{link.label}</span>
               </Link>
             );
           })}
         </nav>
         {user && (
-          <div className="p-4 xs:p-3 border-t border-slate-100">
-            <div className="flex items-center gap-3 mb-3 xs:gap-2 xs:mb-2">
-              <div className="w-8 h-8 xs:w-7 xs:h-7 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center text-sm font-bold">
+          <div className="p-5 xs:p-4 border-t border-slate-200/50 bg-slate-50/50">
+            <div className="flex items-center gap-3.5 mb-4 xs:gap-3 xs:mb-3">
+              <div className="w-[38px] h-[38px] xs:w-8 xs:h-8 rounded-full bg-gradient-to-br from-indigo-100 to-primary-100 text-primary-700 flex items-center justify-center shadow-sm border border-primary-200/50 font-bold">
                 {(user.name || user.email)?.[0]?.toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-slate-900 truncate xs:text-xs">{user.name || user.email}</p>
-                <span className={'text-xs px-1.5 py-0.5 rounded font-medium ' + (roleColors[user.role] || '')}>{user.role}</span>
+                <p className="text-sm font-bold text-slate-900 truncate tracking-tight">{user.name || user.email}</p>
+                <div className="mt-0.5">
+                  <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${roleColors[user.role] || ''}`}>{user.role}</span>
+                </div>
               </div>
             </div>
-            <button onClick={() => { logout(); navigate('/login'); }} className="w-full btn-secondary text-xs py-1.5 xs:py-1">Sign out</button>
+            <button onClick={() => { logout(); navigate('/login'); }} className="w-full btn-secondary text-sm py-2 xs:py-1.5 shadow-sm border-slate-200 hover:border-slate-300 font-semibold text-slate-700">Sign out</button>
           </div>
         )}
       </aside>
-      <main className={`flex-1 p-4 xs:p-3 pt-16 xs:pt-14 w-full overflow-y-auto transition-all duration-300 ${
-        sidebarOpen ? 'ml-64 sm:ml-64' : 'ml-0 sm:ml-64'
+      <main className={`flex-1 p-6 xs:p-4 pt-16 xs:pt-14 w-full h-screen overflow-y-auto transition-all duration-400 ease-[cubic-bezier(0.2,0.8,0.2,1)] bg-slate-50/50 ${
+        sidebarOpen ? 'ml-72 sm:ml-72' : 'ml-0 sm:ml-72'
       }`}>{children}</main>
     </div>
   );
