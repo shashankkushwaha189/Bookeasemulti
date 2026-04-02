@@ -48,28 +48,43 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-slate-100 p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-slate-50 p-4 font-sans selection:bg-primary-500 selection:text-white">
+      {/* Premium Background Blobs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary-400/20 blur-[100px] pointer-events-none animate-pulse"></div>
+      <div className="absolute bottom-[-10%] right-[-5%] w-[50%] h-[50%] rounded-full bg-indigo-500/10 blur-[120px] pointer-events-none"></div>
+
+      <div className="w-full max-w-[420px] relative z-10 my-8">
         <div className="text-center mb-8">
-          <div className="w-14 h-14 bg-primary-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4 shadow-lg">B</div>
-          <h1 className="text-3xl font-bold text-slate-900">BookEase</h1>
-          <p className="text-slate-500 mt-1">Create your account</p>
+          <div className="w-16 h-16 bg-gradient-to-br from-primary-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white font-extrabold text-3xl mx-auto mb-5 shadow-xl shadow-primary-500/30 transform transition hover:scale-105">B</div>
+          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700">BookEase</h1>
+          <p className="text-slate-500/90 mt-2 font-medium tracking-wide">Create your account</p>
         </div>
-        <div className="card shadow-md">
-          <h2 className="text-xl font-semibold text-slate-800 mb-6">Create account</h2>
-          {error && <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">{error}</div>}
+        
+        <div className="bg-white/80 backdrop-blur-xl shadow-2xl shadow-slate-200/50 rounded-3xl border border-white/60 p-8 transition-all">
+          <h2 className="text-2xl font-bold text-slate-800 mb-6 tracking-tight">Register</h2>
+          {error && <div className="mb-5 p-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm font-medium animate-in fade-in slide-in-from-top-2">{error}</div>}
           
           {!isOtpSent ? (
             <>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div><label className="label">Full Name</label><input className="input" placeholder="Jane Smith" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required /></div>
-                <div><label className="label">Email</label><input type="email" className="input" placeholder="you@example.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required autoComplete="username" /></div>
-                <div><label className="label">Phone</label><input className="input" placeholder="+91 9876543210" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} autoComplete="tel" /></div>
-                <div><label className="label">Password</label>
-                  <div className="relative">
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Full Name</label>
+                  <input className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500 transition-all font-medium text-slate-800 placeholder-slate-400" placeholder="Jane Smith" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email Address</label>
+                  <input type="email" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500 transition-all font-medium text-slate-800 placeholder-slate-400" placeholder="you@example.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required autoComplete="username" />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Phone</label>
+                  <input className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500 transition-all font-medium text-slate-800 placeholder-slate-400" placeholder="+91 9876543210" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} autoComplete="tel" />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
+                  <div className="relative group">
                     <input 
                       type={showPassword ? "text" : "password"} 
-                      className="input pr-10" 
+                      className="w-full px-4 py-3 pr-12 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500 transition-all font-medium text-slate-800 placeholder-slate-400" 
                       placeholder="Min 6 characters" 
                       value={form.password} 
                       onChange={e => setForm({ ...form, password: e.target.value })} 
@@ -80,7 +95,7 @@ const Register = () => {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none p-1 rounded-md transition-colors"
                     >
                       {showPassword ? (
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,18 +110,20 @@ const Register = () => {
                     </button>
                   </div>
                 </div>
-                <button type="submit" className="btn-primary w-full" disabled={loading}>{loading ? 'Creating…' : 'Create account'}</button>
+                <button type="submit" className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-slate-900/10 focus:ring-2 focus:ring-slate-900/50 focus:outline-none active:scale-[0.98]" disabled={loading}>
+                  {loading ? 'Creating…' : 'Create account'}
+                </button>
               </form>
-              <p className="text-center text-sm text-slate-500 mt-4">Already have an account? <Link to="/login" className="text-primary-600 hover:underline font-medium">Sign in</Link></p>
+              <p className="text-center text-sm text-slate-500 mt-6 font-medium">Already have an account? <Link to="/login" className="text-primary-600 hover:text-primary-700 hover:underline underline-offset-4 font-bold transition-all">Sign in</Link></p>
             </>
           ) : (
-            <div className="space-y-4">
-              <form onSubmit={handleVerifyOtp} className="space-y-4">
+            <div className="space-y-6">
+              <form onSubmit={handleVerifyOtp} className="space-y-5">
                 <div>
-                  <label className="label text-center mb-2">Enter the 6-digit code sent to {form.email}</label>
+                  <label className="block text-sm font-semibold text-slate-700 text-center mb-4">Enter the 6-digit code sent to <br/><span className="text-primary-600 font-bold">{form.email}</span></label>
                   <input 
                     type="text" 
-                    className="input text-center text-3xl font-bold tracking-widest py-4" 
+                    className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-xl text-center text-3xl font-mono font-bold tracking-[0.3em] focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500 transition-all text-slate-800 placeholder-slate-300" 
                     placeholder="000000" 
                     maxLength={6}
                     value={otp} 
@@ -114,11 +131,13 @@ const Register = () => {
                     required 
                   />
                 </div>
-                <button type="submit" className="btn-primary w-full" disabled={loading}>{loading ? 'Verifying…' : 'Verify Account'}</button>
+                <button type="submit" className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-slate-900/10 focus:ring-2 focus:ring-slate-900/50 focus:outline-none active:scale-[0.98]" disabled={loading || otp.length < 6}>
+                  {loading ? 'Verifying…' : 'Verify Account'}
+                </button>
               </form>
-              <p className="text-center mt-4">
-                <button type="button" onClick={() => setIsOtpSent(false)} className="text-primary-600 hover:underline text-sm font-medium">Back to Register</button>
-              </p>
+              <div className="text-center">
+                <button type="button" onClick={() => setIsOtpSent(false)} className="text-slate-500 hover:text-slate-700 text-sm font-semibold transition-colors">← Back to Register</button>
+              </div>
             </div>
           )}
         </div>

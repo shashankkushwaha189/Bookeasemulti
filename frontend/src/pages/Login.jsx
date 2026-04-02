@@ -33,27 +33,36 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-slate-100 p-4 xs:p-2">
-      <div className="w-full max-w-md xs:max-w-sm">
-        <div className="text-center mb-6 xs:mb-4">
-          <div className="w-14 h-14 xs:w-12 xs:h-12 bg-primary-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl xs:text-xl mx-auto mb-4 xs:mb-3 shadow-lg">B</div>
-          <h1 className="text-3xl xs:text-2xl font-bold text-slate-900">BookEase</h1>
-          <p className="text-slate-500 xs:text-xs mt-1">Universal Appointment Platform</p>
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-slate-50 p-4 xs:p-2 font-sans selection:bg-primary-500 selection:text-white">
+      {/* Premium Background Blobs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary-400/20 blur-[100px] pointer-events-none animate-pulse"></div>
+      <div className="absolute bottom-[-10%] right-[-5%] w-[50%] h-[50%] rounded-full bg-indigo-500/10 blur-[120px] pointer-events-none"></div>
+
+      <div className="w-full max-w-[420px] relative z-10">
+        <div className="text-center mb-8 xs:mb-6">
+          <div className="w-16 h-16 xs:w-14 xs:h-14 bg-gradient-to-br from-primary-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white font-extrabold text-3xl xs:text-2xl mx-auto mb-5 shadow-xl shadow-primary-500/30 transform transition hover:scale-105">B</div>
+          <h1 className="text-4xl xs:text-3xl font-extrabold text-slate-900 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700">BookEase</h1>
+          <p className="text-slate-500/90 xs:text-sm mt-2 font-medium tracking-wide">Universal Appointment Platform</p>
         </div>
-        <div className="card shadow-md">
-          <h2 className="text-xl xs:text-lg font-semibold text-slate-800 mb-6 xs:mb-4">Sign in</h2>
-          {error && <div className="mb-4 p-3 xs:p-2 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm xs:text-xs">{error}</div>}
-          <form onSubmit={handleSubmit} className="space-y-4 xs:space-y-3">
-            <div><label className="label">Email</label><input type="email" className="input" placeholder="you@example.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required autoComplete="username" /></div>
+        
+        <div className="bg-white/80 backdrop-blur-xl shadow-2xl shadow-slate-200/50 rounded-3xl border border-white/60 p-8 xs:p-6 transition-all">
+          <h2 className="text-2xl xs:text-xl font-bold text-slate-800 mb-6 xs:mb-5 tracking-tight">Sign in</h2>
+          
+          {error && <div className="mb-5 p-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm font-medium animate-in fade-in slide-in-from-top-2">{error}</div>}
+          <form onSubmit={handleSubmit} className="space-y-5 xs:space-y-4">
             <div>
-              <div className="flex justify-between items-center mb-1">
-                <label className="label !mb-0">Password</label>
-                <Link to="/forgot-password" className="text-xs font-medium text-primary-600 hover:text-primary-700">Forgot password?</Link>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email Address</label>
+              <input type="email" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500 transition-all font-medium text-slate-800 placeholder-slate-400" placeholder="you@example.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required autoComplete="username" />
+            </div>
+            <div>
+              <div className="flex justify-between items-center mb-1.5">
+                <label className="block text-sm font-semibold text-slate-700">Password</label>
+                <Link to="/forgot-password" className="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">Forgot password?</Link>
               </div>
-              <div className="relative">
+              <div className="relative group">
                 <input 
                   type={showPassword ? "text" : "password"} 
-                  className="input pr-10" 
+                  className="w-full px-4 py-3 pr-12 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500 transition-all font-medium text-slate-800 placeholder-slate-400" 
                   placeholder="••••••••" 
                   value={form.password} 
                   onChange={e => setForm({ ...form, password: e.target.value })} 
@@ -63,7 +72,7 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none p-1 rounded-md transition-colors"
                 >
                   {showPassword ? (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,26 +87,31 @@ const Login = () => {
                 </button>
               </div>
             </div>
-            <button type="submit" className="btn-primary w-full" disabled={loading}>{loading ? 'Signing in…' : 'Sign in'}</button>
+            <button type="submit" className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-slate-900/10 focus:ring-2 focus:ring-slate-900/50 focus:outline-none active:scale-[0.98]" disabled={loading}>
+              {loading ? 'Authenticating…' : 'Sign in'}
+            </button>
           </form>
 
-          <div className="mt-6 flex items-center justify-center space-x-2">
-            <span className="h-px w-1/4 bg-slate-200"></span>
-            <span className="text-xs text-slate-400">or continue with</span>
-            <span className="h-px w-1/4 bg-slate-200"></span>
+          <div className="mt-8 flex items-center justify-center space-x-4">
+            <span className="h-px flex-1 bg-slate-200"></span>
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-widest">Or continue with</span>
+            <span className="h-px flex-1 bg-slate-200"></span>
           </div>
 
-          <div className="mt-6 flex justify-center">
+          <div className="mt-7 flex justify-center [&>div]:w-full [&>div>div]:w-full transition-transform hover:scale-[1.02]">
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
               onError={() => setError('Google Authentication Failed.')}
               shape="pill"
+              size="large"
+              width="350"
             />
           </div>
-          <p className="text-center text-sm xs:text-xs text-slate-500 mt-4 xs:mt-3">New here? <Link to="/register" className="text-primary-600 hover:underline font-medium">Create account</Link></p>
+          <p className="text-center text-sm xs:text-xs text-slate-500 mt-8 font-medium">New to BookEase? <Link to="/register" className="text-primary-600 hover:text-primary-700 hover:underline underline-offset-4 font-bold transition-all">Create an account</Link></p>
         </div>
       </div>
     </div>
   );
 };
+
 export default Login;
