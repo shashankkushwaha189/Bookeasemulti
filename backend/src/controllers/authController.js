@@ -23,26 +23,22 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendOTP = async (email, otp) => {
-  try {
-    const mailOptions = {
-      from: `"BookEase" <${process.env.SMTP_USER}>`,
-      to: email,
-      subject: 'Verify your BookEase Account',
-      html: `
-        <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; text-align: center;">
-          <h2>Welcome to BookEase!</h2>
-          <p>Please use the following 6-digit code to verify your account.</p>
-          <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #2563eb; margin: 20px 0;">
-            ${otp}
-          </div>
-          <p>This code is valid for 10 minutes.</p>
+  const mailOptions = {
+    from: `"BookEase" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: 'Verify your BookEase Account',
+    html: `
+      <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; text-align: center;">
+        <h2>Welcome to BookEase!</h2>
+        <p>Please use the following 6-digit code to verify your account.</p>
+        <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #2563eb; margin: 20px 0;">
+          ${otp}
         </div>
-      `,
-    };
-    await transporter.sendMail(mailOptions);
-  } catch (error) {
-    console.error('Error sending OTP:', error);
-  }
+        <p>This code is valid for 10 minutes.</p>
+      </div>
+    `,
+  };
+  await transporter.sendMail(mailOptions);
 };
 
 const sendResetOTP = async (email, otp) => {
@@ -89,17 +85,26 @@ const register = async (req, res) => {
       } else {
         // Resend OTP for existing unverified user
         await user.update({ otp, otp_expires_at });
-        sendOTP(email, otp); // Fire and forget email to speed up response
-        return res.status(200).json({ message: 'OTP re-sent to email.', email: user.email });
+        try {
+          await sendOTP(email, otp);
+          return res.status(200).json({ message: 'OTP re-sent to email.', email: user.email });
+        } catch (mailErr) {
+          console.error("Resend OTP Mail Error:", mailErr);
+          return res.status(500).json({ message: 'Failed to dispatch email from server.' });
+        }
       }
     }
 
     user = await User.create({ email, password, role: 'CUSTOMER', is_verified: false, otp, otp_expires_at });
     await Customer.create({ user_id: user.id, name, phone: phone || '' });
     
-    sendOTP(email, otp); // Fire and forget email to speed up response
-    
-    return res.status(201).json({ message: 'Registration initiated. OTP sent to email.', email: user.email });
+    try {
+      await sendOTP(email, otp);
+      return res.status(201).json({ message: 'Registration initiated. OTP sent to email.', email: user.email });
+    } catch (mailErr) {
+      console.error("Registration Mail Error:", mailErr);
+      return res.status(500).json({ message: 'Account created, but failed to send OTP from server. Mail issue.' });
+    }
   } catch (err) { console.error(err); return res.status(500).json({ message: 'Server error.' }); }
 };
 
