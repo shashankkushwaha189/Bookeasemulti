@@ -15,20 +15,26 @@ const Register = () => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
   const [resendLoading, setResendLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setError(''); setLoading(true);
     try { 
-      await register({ ...form, role: 'CUSTOMER' }); 
+      console.log('Registering user with data:', { ...form, role: 'CUSTOMER' });
+      const result = await register({ ...form, role: 'CUSTOMER' }); 
+      console.log('Registration result:', result);
       setIsOtpSent(true);
     }
-    catch (err) { setError(err.response?.data?.message || 'Registration failed.'); }
+    catch (err) { 
+      console.error('Registration error:', err);
+      setError(err.response?.data?.message || 'Registration failed.'); 
+    }
     finally { setLoading(false); }
   };
 
   const handleVerifyOtp = async (e, directOtp = null) => {
     if (e) e.preventDefault(); 
-    setError(''); setLoading(true);
+    setError(''); setSuccessMessage(''); setLoading(true);
     const codeToVerify = directOtp || otp;
     if (codeToVerify.length !== 6) {
       setError('Please enter the 6-digit code.');
@@ -39,10 +45,19 @@ const Register = () => {
       console.log('Verifying OTP for email:', form.email, 'code:', codeToVerify);
       const user = await verifyOtp(form.email, codeToVerify); 
       console.log('OTP verification successful:', user);
+      console.log('User role:', user.role);
+      console.log('User data:', JSON.stringify(user, null, 2));
+      
       // Use role-based navigation
       const redirectPath = roleMap[user.role] || '/businesses';
       console.log('Navigating to:', redirectPath);
-      navigate(redirectPath); 
+      
+      setSuccessMessage(`Account verified! Redirecting to ${user.role} dashboard...`);
+      
+      // Add a small delay to ensure state is updated
+      setTimeout(() => {
+        navigate(redirectPath); 
+      }, 1500);
     }
     catch (err) { 
       console.error('OTP verification error:', err);
@@ -110,6 +125,7 @@ const Register = () => {
         <div className="bg-white/80 backdrop-blur-xl shadow-2xl shadow-slate-200/50 rounded-3xl border border-white/60 p-8 transition-all">
           <h2 className="text-2xl font-bold text-slate-800 mb-6 tracking-tight">Register</h2>
           {error && <div className="mb-5 p-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm font-medium animate-in fade-in slide-in-from-top-2">{error}</div>}
+          {successMessage && <div className="mb-5 p-3 rounded-xl bg-green-50 border border-green-100 text-green-600 text-sm font-medium animate-in fade-in slide-in-from-top-2">{successMessage}</div>}
           
           {!isOtpSent ? (
             <>
