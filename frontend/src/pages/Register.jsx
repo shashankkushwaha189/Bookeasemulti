@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../routes/AuthContext';
 import { GoogleLogin } from '@react-oauth/google';
 
+const roleMap = { SUPER_ADMIN: '/super-admin/dashboard', ADMIN: '/admin/dashboard', STAFF: '/staff/dashboard', CUSTOMER: '/businesses' };
+
 const Register = () => {
   const { register, verifyOtp, googleLogin } = useAuth();
   const navigate = useNavigate();
@@ -37,7 +39,10 @@ const Register = () => {
       console.log('Verifying OTP for email:', form.email, 'code:', codeToVerify);
       const user = await verifyOtp(form.email, codeToVerify); 
       console.log('OTP verification successful:', user);
-      navigate('/businesses'); 
+      // Use role-based navigation
+      const redirectPath = roleMap[user.role] || '/businesses';
+      console.log('Navigating to:', redirectPath);
+      navigate(redirectPath); 
     }
     catch (err) { 
       console.error('OTP verification error:', err);
@@ -77,7 +82,11 @@ const Register = () => {
     setError(''); setLoading(true);
     try {
       const user = await googleLogin(credentialResponse.credential);
-      navigate('/businesses');
+      console.log('Google signup successful:', user);
+      // Use role-based navigation
+      const redirectPath = roleMap[user.role] || '/businesses';
+      console.log('Google signup navigating to:', redirectPath);
+      navigate(redirectPath);
     } catch (err) {
       setError(err.response?.data?.message || 'Google Registration failed.');
     } finally {

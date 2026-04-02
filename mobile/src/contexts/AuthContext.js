@@ -100,8 +100,11 @@ export const AuthProvider = ({ children }) => {
 
   const verifyOtp = async (email, otp) => {
     try {
+      console.log('Starting OTP verification for:', email);
       const response = await authAPI.verifyOtp({ email, otp });
       const { token: newToken, user: newUser } = response.data;
+      
+      console.log('OTP verification successful:', newUser);
       
       await AsyncStorage.setItem('token', newToken);
       await AsyncStorage.setItem('user', JSON.stringify(newUser));
@@ -109,8 +112,15 @@ export const AuthProvider = ({ children }) => {
       setToken(newToken);
       setUser(newUser);
       
+      console.log('User state updated in AuthContext');
+      
+      // Force a re-render by updating loading state briefly
+      setLoading(true);
+      setTimeout(() => setLoading(false), 100);
+      
       return { success: true };
     } catch (error) {
+      console.error('OTP verification failed:', error);
       const message = error.response?.data?.message || 'Verification failed';
       return { success: false, error: message };
     }
@@ -131,6 +141,12 @@ export const AuthProvider = ({ children }) => {
     AsyncStorage.setItem('user', JSON.stringify(userData));
   };
 
+  const triggerNavigation = () => {
+    // Force navigation by toggling loading state
+    setLoading(true);
+    setTimeout(() => setLoading(false), 100);
+  };
+
   const value = {
     user,
     token,
@@ -141,6 +157,7 @@ export const AuthProvider = ({ children }) => {
     verifyOtp,
     logout,
     updateUser,
+    triggerNavigation,
     isAuthenticated: !!token,
   };
 

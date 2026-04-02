@@ -29,7 +29,7 @@ const RegisterScreen = ({ navigation }) => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
   const [resendLoading, setResendLoading] = useState(false);
-  const { register, verifyOtp, googleLogin } = useAuth();
+  const { register, verifyOtp, googleLogin, triggerNavigation } = useAuth();
 
   const handleRegister = async () => {
     setError('');
@@ -71,7 +71,10 @@ const RegisterScreen = ({ navigation }) => {
         setError(result.error || 'Verification failed.');
       } else {
         setSuccess('Account verified successfully! Redirecting...');
-        // Navigation will be handled automatically by AuthContext/AppNavigator
+        // Trigger navigation after a short delay
+        setTimeout(() => {
+          triggerNavigation();
+        }, 1000);
       }
     } catch (e) {
       setError('Unexpected error during verification.');
