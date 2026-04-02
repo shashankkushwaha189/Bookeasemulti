@@ -18,7 +18,8 @@ const transporter = nodemailer.createTransport({
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
-  family: 4, // Force IPv4 to prevent ENETUNREACH errors
+  family: 4, // Force IPv4 preference
+  localAddress: '0.0.0.0', // Strictly bind to IPv4 to prevent ENETUNREACH in all Node versions
 });
 
 const sendOTP = async (email, otp) => {
