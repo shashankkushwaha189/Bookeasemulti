@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
+import StatCard from '../../components/StatCard';
 import StatusBadge from '../../components/StatusBadge';
 import { appointmentsAPI } from '../../api';
+import {
+  CalendarDaysIcon,
+  CheckBadgeIcon,
+  ClockIcon,
+  XCircleIcon
+} from '@heroicons/react/24/outline';
 
 const AdminAppointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -23,18 +30,24 @@ const AdminAppointments = () => {
 
   return (
     <Layout>
-      <div className="mb-6 xs:ml-20 xs:mt-4"><h1 className="page-title">Appointments</h1><p className="page-subtitle">All appointments at your business</p></div>
+      <div className="mb-6"><h1 className="page-title">Appointments</h1><p className="page-subtitle">All appointments at your business</p></div>
 
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        <div className="card text-center"><p className="text-2xl font-bold text-slate-900">{appointments.length}</p><p className="text-xs text-slate-500 mt-1">Total</p></div>
-        <div className="card text-center"><p className="text-2xl font-bold text-blue-600">{appointments.filter(a => a.status === 'BOOKED').length}</p><p className="text-xs text-slate-500 mt-1">Booked</p></div>
-        <div className="card text-center"><p className="text-2xl font-bold text-emerald-600">{appointments.filter(a => a.status === 'COMPLETED').length}</p><p className="text-xs text-slate-500 mt-1">Completed</p></div>
-        <div className="card text-center"><p className="text-2xl font-bold text-red-600">{appointments.filter(a => a.status === 'CANCELLED').length}</p><p className="text-xs text-slate-500 mt-1">Cancelled</p></div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+        <StatCard label="Total"     value={appointments.length}                                           icon={<CalendarDaysIcon className="w-7 h-7" />} color="purple" />
+        <StatCard label="Booked"    value={appointments.filter(a => a.status === 'BOOKED').length}    icon={<ClockIcon className="w-7 h-7" />} color="blue" />
+        <StatCard label="Completed" value={appointments.filter(a => a.status === 'COMPLETED').length} icon={<CheckBadgeIcon className="w-7 h-7" />} color="emerald" />
+        <StatCard label="Cancelled" value={appointments.filter(a => a.status === 'CANCELLED').length} icon={<XCircleIcon className="w-7 h-7" />} color="pink" />
       </div>
 
-      <div className="flex gap-2 mb-4 flex-wrap">
+      <div className="flex gap-2 mb-6 flex-wrap">
         {['all','today','booked','completed','cancelled'].map(f => (
-          <button key={f} className={'btn text-sm py-1.5 px-3 capitalize ' + (filter === f ? 'btn-primary' : 'btn-secondary')} onClick={() => setFilter(f)}>{f}</button>
+          <button 
+            key={f} 
+            className={`capitalize py-2 px-6 rounded-xl text-sm font-bold whitespace-nowrap transition-all shadow-sm ${filter === f ? 'bg-slate-900 text-white shadow-slate-900/20' : 'bg-white text-slate-600 border border-slate-200/60 hover:bg-slate-50'}`} 
+            onClick={() => setFilter(f)}
+          >
+            {f}
+          </button>
         ))}
       </div>
 

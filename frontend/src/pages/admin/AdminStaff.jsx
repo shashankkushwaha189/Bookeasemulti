@@ -41,7 +41,7 @@ const AdminStaff = () => {
 
   return (
     <Layout>
-      <div className="mb-6 flex items-center justify-between xs:ml-20 xs:mt-4">
+      <div className="mb-6 flex items-center justify-between">
         <div><h1 className="page-title">Staff</h1><p className="page-subtitle">Manage {staffLabel.toLowerCase()}s at your business</p></div>
         <button className="btn-primary xs:mr-4" onClick={openAdd}>+ Add {staffLabel}</button>
       </div>

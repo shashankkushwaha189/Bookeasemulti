@@ -5,6 +5,12 @@ import StatusBadge from '../../components/StatusBadge';
 import { appointmentsAPI, servicesAPI, staffAPI } from '../../api';
 import { useAuth } from '../../routes/AuthContext';
 import { getCategoryIcon } from '../../config/categories';
+import {
+  CalendarDaysIcon,
+  ClockIcon,
+  UserGroupIcon,
+  SparklesIcon
+} from '@heroicons/react/24/outline';
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -27,11 +33,11 @@ const AdminDashboard = () => {
 
   return (
     <Layout>
-      <div className="mb-6 xs:ml-20 xs:mt-4">
+      <div className="mb-6">
         <h1 className="page-title">Admin Dashboard</h1>
         <p className="page-subtitle">Manage your business operations</p>
       </div>
-      <div className="mb-6 xs:ml-20 xs:mt-4">
+      <div className="mb-6">
         <div className="flex items-center gap-3">
           <span className="text-3xl">{catIcon}</span>
           <div>
@@ -41,11 +47,11 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard label="Total Appointments" value={appointments.length}                                           icon="📅" color="blue" />
-        <StatCard label="Today's Bookings"   value={todayCount}                                                    icon="🕐" color="amber" />
-        <StatCard label="Staff Members"      value={staff.length}                                                  icon="👤" color="purple" />
-        <StatCard label="Services"           value={services.length}                                               icon="✂️" color="emerald" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <StatCard label="Total Appointments" value={appointments.length} icon={<CalendarDaysIcon className="w-7 h-7" />} color="blue" />
+        <StatCard label="Today's Bookings"   value={todayCount}          icon={<ClockIcon className="w-7 h-7" />} color="amber" />
+        <StatCard label="Staff Members"      value={staff.length}        icon={<UserGroupIcon className="w-7 h-7" />} color="purple" />
+        <StatCard label="Services"           value={services.length}     icon={<SparklesIcon className="w-7 h-7" />} color="emerald" />
       </div>
 
       <div className="card p-0 overflow-hidden">

@@ -41,7 +41,7 @@ const AdminServices = () => {
 
   return (
     <Layout>
-      <div className="mb-6 flex items-center justify-between xs:ml-20 xs:mt-4">
+      <div className="mb-6 flex items-center justify-between">
         <div><h1 className="page-title">Services</h1><p className="page-subtitle">Manage {serviceLabel.toLowerCase()}s offered at your business</p></div>
         <button className="btn-primary xs:mr-4" onClick={openAdd}>+ Add Service</button>
       </div>

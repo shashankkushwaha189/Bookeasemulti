@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
+import StatCard from '../../components/StatCard';
 import StatusBadge from '../../components/StatusBadge';
 import { staffAPI, appointmentsAPI } from '../../api';
 import { getCategoryIcon } from '../../config/categories';
+import {
+  CalendarDaysIcon,
+  CheckBadgeIcon
+} from '@heroicons/react/24/outline';
 
 const StaffDashboard = () => {
   const [appointments, setAppointments] = useState([]);
@@ -28,19 +33,34 @@ const StaffDashboard = () => {
 
   return (
     <Layout>
-      <div className="mb-6 xs:ml-20 xs:mt-4">
-        <h1 className="page-title">My Schedule</h1>
-        <p className="page-subtitle">{today ? new Date(today + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : ''}</p>
+      <div className="mb-6">
+        <div className="flex items-center gap-3">
+          <CalendarDaysIcon className="w-8 h-8 text-primary-500" />
+          <div>
+            <h1 className="page-title">My Schedule</h1>
+            <p className="page-subtitle">{today ? new Date(today + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : ''}</p>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="card text-center"><p className="text-3xl font-bold text-primary-600">{todayPending}</p><p className="text-sm text-slate-500 mt-1">Pending Today</p></div>
-        <div className="card text-center"><p className="text-3xl font-bold text-emerald-600">{appointments.filter(a => a.status === 'COMPLETED').length}</p><p className="text-sm text-slate-500 mt-1">Completed Total</p></div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-8">
+        <StatCard label="Pending Today" value={todayPending} icon={<CalendarDaysIcon className="w-7 h-7" />} color="blue" />
+        <StatCard label="Completed Total" value={appointments.filter(a => a.status === 'COMPLETED').length} icon={<CheckBadgeIcon className="w-7 h-7" />} color="emerald" />
       </div>
 
-      <div className="flex gap-2 mb-4">
-        <button className={'btn text-sm py-1.5 px-4 ' + (filter === 'today' ? 'btn-primary' : 'btn-secondary')} onClick={() => setFilter('today')}>Today</button>
-        <button className={'btn text-sm py-1.5 px-4 ' + (filter === 'all'   ? 'btn-primary' : 'btn-secondary')} onClick={() => setFilter('all')}>All</button>
+      <div className="flex gap-2 mb-6 flex-wrap">
+        <button 
+          className={`py-2 px-6 rounded-xl text-sm font-bold whitespace-nowrap transition-all shadow-sm ${filter === 'today' ? 'bg-slate-900 text-white shadow-slate-900/20' : 'bg-white text-slate-600 border border-slate-200/60 hover:bg-slate-50'}`} 
+          onClick={() => setFilter('today')}
+        >
+          Today's Schedule
+        </button>
+        <button 
+          className={`py-2 px-6 rounded-xl text-sm font-bold whitespace-nowrap transition-all shadow-sm ${filter === 'all' ? 'bg-slate-900 text-white shadow-slate-900/20' : 'bg-white text-slate-600 border border-slate-200/60 hover:bg-slate-50'}`} 
+          onClick={() => setFilter('all')}
+        >
+          All Appointments
+        </button>
       </div>
 
       {loading ? <div className="text-slate-400 text-sm">Loading…</div> : (

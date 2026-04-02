@@ -3,6 +3,12 @@ import Layout from '../../components/Layout';
 import StatCard from '../../components/StatCard';
 import { superAdminAPI, businessAPI, appointmentsAPI } from '../../api';
 import { getCategoryIcon } from '../../config/categories';
+import {
+  BuildingOfficeIcon,
+  UserGroupIcon,
+  UsersIcon,
+  CalendarDaysIcon
+} from '@heroicons/react/24/outline';
 
 const SuperAdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -20,13 +26,13 @@ const SuperAdminDashboard = () => {
 
   return (
     <Layout>
-      <div className="mb-6 xs:ml-20 xs:mt-4"><h1 className="page-title">Super Admin Dashboard</h1><p className="page-subtitle">System-wide overview across all businesses</p></div>
+      <div className="mb-6"><h1 className="page-title">Super Admin Dashboard</h1><p className="page-subtitle">System-wide overview across all businesses</p></div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard label="Total Businesses"   value={stats?.businesses  || 0} icon="🏢" color="blue" />
-        <StatCard label="Total Staff"        value={stats?.staff       || 0} icon="👤" color="purple" />
-        <StatCard label="Total Customers"    value={stats?.customers   || 0} icon="👥" color="emerald" />
-        <StatCard label="Total Appointments" value={stats?.appointments|| 0} icon="📅" color="amber" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <StatCard label="Total Businesses"   value={stats?.businesses  || 0} icon={<BuildingOfficeIcon className="w-7 h-7" />} color="blue" />
+        <StatCard label="Total Staff"        value={stats?.staff       || 0} icon={<UserGroupIcon className="w-7 h-7" />} color="purple" />
+        <StatCard label="Total Customers"    value={stats?.customers   || 0} icon={<UsersIcon className="w-7 h-7" />} color="emerald" />
+        <StatCard label="Total Appointments" value={stats?.appointments|| 0} icon={<CalendarDaysIcon className="w-7 h-7" />} color="amber" />
       </div>
 
       <div className="card p-0 overflow-hidden mb-6">

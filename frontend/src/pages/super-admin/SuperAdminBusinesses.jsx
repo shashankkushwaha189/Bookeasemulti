@@ -3,6 +3,7 @@ import Layout from '../../components/Layout';
 import Modal from '../../components/Modal';
 import { businessAPI } from '../../api';
 import { CATEGORIES, getCategoryIcon } from '../../config/categories';
+import { MapPinIcon, PhoneIcon } from '@heroicons/react/24/outline';
 
 const empty = { name: '', category: 'Healthcare', address: '', phone: '', description: '', speciality: '', currency: '₹', adminEmail: '', adminPassword: '' };
 
@@ -48,7 +49,7 @@ const SuperAdminBusinesses = () => {
 
   return (
     <Layout>
-      <div className="mb-6 flex items-center justify-between xs:ml-20 xs:mt-4">
+      <div className="mb-6 flex items-center justify-between">
         <div><h1 className="page-title">Businesses</h1><p className="page-subtitle">Manage all businesses in the system</p></div>
         <button className="btn-primary xs:mr-4" onClick={openAdd}>+ Add Business</button>
       </div>
@@ -82,8 +83,8 @@ const SuperAdminBusinesses = () => {
                 <span className={'badge ' + (b.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700')}>{b.is_active ? 'Active' : 'Inactive'}</span>
               </div>
               {b.speciality && <p className="text-xs text-primary-600 font-medium mb-1">{b.speciality}</p>}
-              {b.address && <p className="text-sm text-slate-500 mb-1">📍 {b.address}</p>}
-              {b.phone && <p className="text-sm text-slate-500 mb-3">📞 {b.phone}</p>}
+              {b.address && <p className="text-sm text-slate-500 mb-1 flex items-start gap-1"><MapPinIcon className="w-4 h-4 mt-0.5 text-slate-400 flex-shrink-0" /> {b.address}</p>}
+              {b.phone && <p className="text-sm text-slate-500 mb-3 flex items-center gap-1"><PhoneIcon className="w-4 h-4 text-slate-400 flex-shrink-0" /> {b.phone}</p>}
               <div className="flex gap-2 text-xs text-slate-500 mb-4">
                 <span className="bg-slate-100 px-2 py-1 rounded">{b.staffCount} staff</span>
                 <span className="bg-slate-100 px-2 py-1 rounded">{b.serviceCount} services</span>
