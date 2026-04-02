@@ -12,6 +12,11 @@ import {
 } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
+GoogleSignin.configure({
+  webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
+});
 
 const primaryColor = '#2563eb'; // blue-600
 
@@ -22,7 +27,7 @@ const RegisterScreen = ({ navigation }) => {
   const [error, setError] = useState('');
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
-  const { register, verifyOtp } = useAuth();
+  const { register, verifyOtp, googleLogin } = useAuth();
 
   const handleRegister = async () => {
     setError('');
@@ -64,6 +69,27 @@ const RegisterScreen = ({ navigation }) => {
       }
     } catch (e) {
       setError('Unexpected error during verification.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const idToken = userInfo.data?.idToken || userInfo.idToken;
+      
+      const result = await googleLogin(idToken);
+      if (!result.success) {
+        setError(result.error || 'Google Authentication failed.');
+      }
+    } catch (error) {
+      if (error.code !== 'SIGN_IN_CANCELLED') {
+        setError('Google Authentication failed. ' + error.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -167,6 +193,22 @@ const RegisterScreen = ({ navigation }) => {
               ) : (
                 <Text style={styles.buttonText}>Create account</Text>
               )}
+            </TouchableOpacity>
+
+            <View style={styles.dividerContainer}>
+              <View style={styles.divider} />
+              <Text style={styles.dividerText}>OR CONTINUE WITH</Text>
+              <View style={styles.divider} />
+            </View>
+
+            <TouchableOpacity 
+              style={[styles.googleButton, loading && styles.buttonDisabled]} 
+              onPress={handleGoogleLogin}
+              disabled={loading}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="logo-google" size={20} color="#0f172a" style={{ marginRight: 10 }} />
+              <Text style={styles.googleButtonText}>Sign in with Google</Text>
             </TouchableOpacity>
 
             <View style={styles.footer}>
@@ -341,6 +383,38 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#cbd5e1',
+  },
+  dividerText: {
+    color: '#64748b',
+    paddingHorizontal: 10,
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  googleButton: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#cbd5e1',
+    borderRadius: 8,
+    paddingVertical: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+    flexDirection: 'row',
+  },
+  googleButtonText: {
+    color: '#0f172a',
     fontSize: 16,
     fontWeight: '600',
   },
