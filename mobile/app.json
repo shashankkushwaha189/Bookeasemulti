@@ -23,6 +23,15 @@
       "eas": {
         "projectId": "4985968a-7208-4a88-b247-d79610d75fec"
       }
-    }
+    },
+    "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.YOUR_IOS_URL_SCHEME_HERE"
+        }
+      ]
+    ]
   }
 }
+

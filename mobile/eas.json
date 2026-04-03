@@ -11,6 +11,9 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID": "458109334439-rf1tloi2115r01afprb4hmuma1j3eg4p.apps.googleusercontent.com"
       }
     },
     "production": {}
