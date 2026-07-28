@@ -69,24 +69,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const googleLogin = async (credential) => {
-    try {
-      const response = await authAPI.googleLogin({ idToken: credential });
-      const { token: newToken, user: userData } = response.data;
-      
-      await AsyncStorage.setItem('token', newToken);
-      await AsyncStorage.setItem('user', JSON.stringify(userData));
-      
-      setToken(newToken);
-      setUser(userData);
-      
-      return { success: true, user: userData };
-    } catch (error) {
-      const message = error.response?.data?.message || 'Google Login failed';
-      return { success: false, error: message };
-    }
-  };
-
   const register = async (userData) => {
     try {
       const response = await authAPI.register(userData);
@@ -152,7 +134,6 @@ export const AuthProvider = ({ children }) => {
     token,
     loading,
     login,
-    googleLogin,
     register,
     verifyOtp,
     logout,

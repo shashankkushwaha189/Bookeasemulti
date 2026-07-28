@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../routes/AuthContext';
-import { GoogleLogin } from '@react-oauth/google';
 
 const roleMap = { SUPER_ADMIN: '/super-admin/dashboard', ADMIN: '/admin/dashboard', STAFF: '/staff/dashboard', CUSTOMER: '/businesses' };
 
 const Login = () => {
-  const { login, googleLogin } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
@@ -24,18 +23,6 @@ const Login = () => {
       }
     }
     finally { setLoading(false); }
-  };
-
-  const handleGoogleSuccess = async (credentialResponse) => {
-    setError(''); setLoading(true);
-    try {
-      const user = await googleLogin(credentialResponse.credential);
-      navigate(roleMap[user.role] || '/businesses');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Google Login failed.');
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -98,21 +85,6 @@ const Login = () => {
             </button>
           </form>
 
-          <div className="mt-8 flex items-center justify-center space-x-4">
-            <span className="h-px flex-1 bg-slate-200"></span>
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-widest">Or continue with</span>
-            <span className="h-px flex-1 bg-slate-200"></span>
-          </div>
-
-          <div className="mt-7 flex justify-center transition-transform hover:scale-[1.02] overflow-hidden w-full max-w-[350px] mx-auto">
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={() => setError('Google Authentication Failed.')}
-              shape="pill"
-              size="large"
-              width="300"
-            />
-          </div>
           <p className="text-center text-sm xs:text-xs text-slate-500 mt-8 font-medium">New to BookEase? <Link to="/register" className="text-primary-600 hover:text-primary-700 hover:underline underline-offset-4 font-bold transition-all">Create an account</Link></p>
         </div>
       </div>

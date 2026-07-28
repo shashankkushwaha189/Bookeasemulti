@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../routes/AuthContext';
-import { GoogleLogin } from '@react-oauth/google';
 
 const roleMap = { SUPER_ADMIN: '/super-admin/dashboard', ADMIN: '/admin/dashboard', STAFF: '/staff/dashboard', CUSTOMER: '/businesses' };
 
 const Register = () => {
-  const { register, verifyOtp, googleLogin } = useAuth();
+  const { register, verifyOtp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [form, setForm] = useState({ name: '', email: location.state?.email || '', password: '', phone: '' });
@@ -145,25 +144,6 @@ const Register = () => {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    setError(''); setLoading(true);
-    try {
-      const user = await googleLogin(credentialResponse.credential);
-      console.log('Google signup successful:', user);
-      console.log('User role:', user.role);
-      console.log('User data:', JSON.stringify(user, null, 2));
-      
-      // Use role-based navigation
-      const redirectPath = roleMap[user.role] || '/businesses';
-      console.log('Google signup navigating to:', redirectPath);
-      navigate(redirectPath);
-    } catch (err) {
-      setError(err.response?.data?.message || 'Google Registration failed.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-slate-50 p-4 font-sans selection:bg-primary-500 selection:text-white">
       {/* Premium Background Blobs */}
@@ -233,21 +213,6 @@ const Register = () => {
                 </button>
               </form>
               
-              <div className="mt-8 flex items-center justify-center space-x-4">
-                <span className="h-px flex-1 bg-slate-200"></span>
-                <span className="text-xs font-medium text-slate-400 uppercase tracking-widest">Or continue with</span>
-                <span className="h-px flex-1 bg-slate-200"></span>
-              </div>
-
-              <div className="mt-7 flex justify-center transition-transform hover:scale-[1.02] overflow-hidden w-full max-w-[350px] mx-auto">
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={() => setError('Google Authentication Failed.')}
-                  shape="pill"
-                  size="large"
-                  width="300"
-                />
-              </div>
               
               <p className="text-center text-sm text-slate-500 mt-6 font-medium">Already have an account? <Link to="/login" className="text-primary-600 hover:text-primary-700 hover:underline underline-offset-4 font-bold transition-all">Sign in</Link></p>
             </>

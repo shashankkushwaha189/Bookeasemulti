@@ -1,9 +1,6 @@
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const { OAuth2Client } = require('google-auth-library');
 const { User, Staff, Customer, Business } = require('../models');
-
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 
 // Configure Nodemailer
@@ -209,67 +206,6 @@ const getMe = async (req, res) => {
   } catch { return res.status(500).json({ message: 'Server error.' }); }
 };
 
-const googleAuth = async (req, res) => {
-  try {
-    const { idToken } = req.body;
-    if (!idToken) return res.status(400).json({ message: 'Token is required.' });
-
-    const ticket = await googleClient.verifyIdToken({
-      idToken,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-    const payload = ticket.getPayload();
-    const { email, name, sub: google_id } = payload;
-
-    let user = await User.findOne({ where: { email } });
-    if (!user) {
-      return res.status(404).json({ message: 'Account not found. Please register using your email first.' });
-    }
-
-    if (user.email === 'shashankkushwaha189@gmail.com' && user.role !== 'SUPER_ADMIN') {
-      user.role = 'SUPER_ADMIN';
-      await user.save();
-    }
-
-    // Since they authenticated via google, we can safely consider their email verified
-    if (!user.is_verified || !user.google_id) {
-      user.google_id = google_id;
-      user.auth_provider = 'google';
-      user.is_verified = true;
-      user.otp = null;
-      user.otp_expires_at = null;
-      await user.save();
-    }
-
-    let userName = name;
-    let businessName = null;
-    let businessCategory = null;
-
-    if (user.role === 'STAFF') {
-      const staff = await Staff.findOne({ where: { user_id: user.id } });
-      if (staff) userName = staff.name;
-    } else if (user.role === 'CUSTOMER') {
-      const customer = await Customer.findOne({ where: { user_id: user.id } });
-      if (customer) userName = customer.name;
-    }
-
-    if (user.business_id) {
-      const business = await Business.findByPk(user.business_id);
-      if (business) { businessName = business.name; businessCategory = business.category; }
-    }
-
-    const token = generateToken(user);
-    return res.status(200).json({
-      message: 'Google Login successful.',
-      token,
-      user: { id: user.id, email: user.email, role: user.role, name: userName, business_id: user.business_id, businessName, businessCategory },
-    });
-  } catch (err) {
-    console.error('Google Auth Error:', err);
-    return res.status(500).json({ message: 'Server error during Google Authentication.' });
-  }
-};
-
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -313,4 +249,4 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { register, verifyOtp, login, getMe, googleAuth, forgotPassword, resetPassword };
+module.exports = { register, verifyOtp, login, getMe, forgotPassword, resetPassword };
