@@ -51,7 +51,8 @@ const RegisterScreen = ({ navigation, route }) => {
       if (!result.success) {
         setError(result.error || 'Registration failed.');
       } else {
-        setIsOtpSent(true);
+        setSuccess('Account created successfully! Redirecting...');
+        setTimeout(() => triggerNavigation(), 1000);
       }
     } catch {
       setError('An unexpected error occurred');

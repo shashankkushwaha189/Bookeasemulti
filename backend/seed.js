@@ -5,7 +5,7 @@ const { User, Business } = require('./src/models');
 const seed = async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync({ alter: true });
+    await sequelize.sync({ alter: process.env.DB_ALTER === 'true' });
     console.log('✅ Tables ready.');
 
     // Super Admin
@@ -40,8 +40,22 @@ const seed = async () => {
     console.log('\n🎉 Seed complete!');
     console.log(`   Login: ${superAdminEmail} / admin123`);
     console.log('   Then create admins for each business from Super Admin panel.\n');
-    process.exit(0);
-  } catch (err) { console.error('❌ Seed failed:', err.message); process.exit(1); }
+    
+    if (require.main === module) {
+      process.exit(0);
+    }
+  } catch (err) {
+    console.error('❌ Seed failed:', err.message);
+    if (require.main === module) {
+      process.exit(1);
+    } else {
+      throw err;
+    }
+  }
 };
 
-seed();
+if (require.main === module) {
+  seed();
+}
+
+module.exports = seed;

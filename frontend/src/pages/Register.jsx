@@ -23,9 +23,14 @@ const Register = () => {
     e.preventDefault(); setError(''); setLoading(true);
     try { 
       console.log('Registering user with data:', { ...form, role: 'CUSTOMER' });
-      const result = await register({ ...form, role: 'CUSTOMER' }); 
-      console.log('Registration result:', result);
-      setIsOtpSent(true);
+      const user = await register({ ...form, role: 'CUSTOMER' }); 
+      console.log('Registration result:', user);
+      
+      const redirectPath = roleMap[user.role] || '/businesses';
+      setSuccessMessage('Account created successfully! Redirecting...');
+      setTimeout(() => {
+        navigate(redirectPath);
+      }, 1500);
     }
     catch (err) { 
       console.error('Registration error:', err);

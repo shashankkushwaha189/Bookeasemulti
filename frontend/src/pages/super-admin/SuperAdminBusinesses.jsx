@@ -21,13 +21,13 @@ const SuperAdminBusinesses = () => {
   useEffect(() => { load(); }, []);
 
   const openAdd  = () => { setEditing(null); setForm(empty); setError(''); setOpen(true); };
-  const openEdit = (b) => { setEditing(b); setForm({ name: b.name, category: b.category, address: b.address||'', phone: b.phone||'', description: b.description||'', speciality: b.speciality||'', currency: b.currency||'₹', adminEmail: '', adminPassword: '' }); setError(''); setOpen(true); };
+  const openEdit = (b) => { setEditing(b); setForm({ name: b.name, category: b.category, address: b.address||'', phone: b.phone||'', description: b.description||'', speciality: b.speciality||'', currency: b.currency||'₹', adminEmail: b.adminEmail || '', adminPassword: '' }); setError(''); setOpen(true); };
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setSaving(true); setError('');
     try {
       editing
-        ? await businessAPI.update(editing.id, { name: form.name, category: form.category, address: form.address, phone: form.phone, description: form.description, speciality: form.speciality, currency: form.currency })
+        ? await businessAPI.update(editing.id, { name: form.name, category: form.category, address: form.address, phone: form.phone, description: form.description, speciality: form.speciality, currency: form.currency, adminEmail: form.adminEmail, adminPassword: form.adminPassword })
         : await businessAPI.create(form);
       setOpen(false); load();
     } catch (err) { setError(err.response?.data?.message || 'Failed to save.'); }
@@ -88,10 +88,17 @@ const SuperAdminBusinesses = () => {
               {b.speciality && <p className="text-xs text-primary-600 font-medium mb-1">{b.speciality}</p>}
               {b.address && <p className="text-sm text-slate-500 mb-1 flex items-start gap-1"><MapPinIcon className="w-4 h-4 mt-0.5 text-slate-400 flex-shrink-0" /> {b.address}</p>}
               {b.phone && <p className="text-sm text-slate-500 mb-3 flex items-center gap-1"><PhoneIcon className="w-4 h-4 text-slate-400 flex-shrink-0" /> {b.phone}</p>}
-              <div className="flex gap-2 text-xs text-slate-500 mb-4">
+              <div className="flex gap-2 text-xs text-slate-500 mb-3">
                 <span className="bg-slate-100 px-2 py-1 rounded">{b.staffCount} staff</span>
                 <span className="bg-slate-100 px-2 py-1 rounded">{b.serviceCount} services</span>
                 <span className="bg-slate-100 px-2 py-1 rounded">{b.appointmentCount} appts</span>
+              </div>
+              <div className="text-xs mb-4">
+                {b.adminEmail ? (
+                  <span className="text-slate-500 font-mono">Admin: {b.adminEmail}</span>
+                ) : (
+                  <span className="text-rose-500 italic font-medium">⚠️ No Admin Assigned</span>
+                )}
               </div>
               <div className="flex gap-2 pt-3 border-t border-slate-100">
                 <button className="btn-secondary text-xs py-1 px-2 flex-1" onClick={() => openEdit(b)}>Edit</button>
@@ -118,15 +125,33 @@ const SuperAdminBusinesses = () => {
           <div><label className="label">Phone</label><input className="input" placeholder="+91 9876543210" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} /></div>
           <div><label className="label">Description</label><textarea className="input resize-none" rows={2} placeholder="About this business…" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} /></div>
           <div><label className="label">Currency Symbol</label><input className="input" placeholder="₹ or $ or €" value={form.currency} onChange={e => setForm({ ...form, currency: e.target.value })} /></div>
-          {!editing && (
-            <div className="pt-2 border-t border-slate-100">
-              <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Admin Account (optional)</p>
-              <div className="space-y-3">
-                <div><label className="label">Admin Email</label><input type="email" className="input" placeholder="admin@business.com" value={form.adminEmail} onChange={e => setForm({ ...form, adminEmail: e.target.value })} /></div>
-                <div><label className="label">Admin Password</label><input type="password" className="input" placeholder="Min 6 characters" value={form.adminPassword} onChange={e => setForm({ ...form, adminPassword: e.target.value })} /></div>
+          <div className="pt-2 border-t border-slate-100">
+            <p className="text-xs font-semibold text-slate-500 uppercase mb-2">
+              {editing ? 'Admin Account (Edit)' : 'Admin Account (Optional)'}
+            </p>
+            <div className="space-y-3">
+              <div>
+                <label className="label">Admin Email</label>
+                <input 
+                  type="email" 
+                  className="input" 
+                  placeholder="admin@business.com" 
+                  value={form.adminEmail} 
+                  onChange={e => setForm({ ...form, adminEmail: e.target.value })} 
+                />
+              </div>
+              <div>
+                <label className="label">Admin Password</label>
+                <input 
+                  type="password" 
+                  className="input" 
+                  placeholder={editing ? "Leave blank to keep current password" : "Min 6 characters"} 
+                  value={form.adminPassword} 
+                  onChange={e => setForm({ ...form, adminPassword: e.target.value })} 
+                />
               </div>
             </div>
-          )}
+          </div>
           <div className="flex gap-3 pt-2">
             <button type="submit" className="btn-primary flex-1" disabled={saving}>{saving ? 'Saving…' : editing ? 'Update' : 'Create Business'}</button>
             <button type="button" className="btn-secondary flex-1" onClick={() => setOpen(false)}>Cancel</button>

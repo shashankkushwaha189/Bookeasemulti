@@ -52,10 +52,10 @@ A comprehensive appointment booking system that works for ANY appointment-based 
 ## 🚀 Quick Start
 
 ### 1. Database Setup
-```bash
-# Create PostgreSQL database
-createdb bookease_pro
-```
+We recommend using **Neon DB** (a serverless cloud PostgreSQL database) for this project:
+1. Create a free account on [Neon.tech](https://neon.tech).
+2. Create a new database project and copy your connection string.
+3. You will paste this connection string as the `DATABASE_URL` in your `backend/.env` file.
 
 ### 2. Backend Setup
 ```bash
@@ -232,16 +232,9 @@ Create `backend/.env`:
 
 ```env
 PORT=5000
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=bookease_pro
-DB_USER=your_db_user
-DB_PASSWORD=your_db_password
+DATABASE_URL=postgresql://username:password@ep-cool-fog-123456.us-east-2.aws.neon.tech/neondb?sslmode=require
 JWT_SECRET=your_jwt_secret_key
 CLIENT_URL=http://localhost:5173
-
-# For production (Render/Heroku)
-DATABASE_URL=postgresql://user:password@host:port/database
 ```
 
 ## 🚀 Deployment

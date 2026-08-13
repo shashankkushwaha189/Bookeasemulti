@@ -72,8 +72,15 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       const response = await authAPI.register(userData);
-      // Backend now returns HTTP 201 with message, but NO token yet.
-      return { success: true, email: response.data.email, message: response.data.message };
+      const { token: newToken, user: newUser } = response.data;
+      
+      await AsyncStorage.setItem('token', newToken);
+      await AsyncStorage.setItem('user', JSON.stringify(newUser));
+      
+      setToken(newToken);
+      setUser(newUser);
+      
+      return { success: true, user: newUser };
     } catch (error) {
       const message = error.response?.data?.message || 'Registration failed';
       return { success: false, error: message };

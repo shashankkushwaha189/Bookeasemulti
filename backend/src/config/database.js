@@ -3,8 +3,8 @@ require("dotenv").config();
 
 let sequelize;
 
+// Neon DB and production environments typically use a single connection string (DATABASE_URL) and require SSL.
 if (process.env.DATABASE_URL) {
-  // Production (Render)
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: "postgres",
     protocol: "postgres",
@@ -17,7 +17,10 @@ if (process.env.DATABASE_URL) {
     },
   });
 } else {
-  // Local Development
+  // Local Development with individual variables
+  // Auto-detect if host is a Neon DB domain or SSL is explicitly requested
+  const useSSL = process.env.DB_SSL === "true" || (process.env.DB_HOST && process.env.DB_HOST.includes("neon.tech"));
+
   sequelize = new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USER,
@@ -27,6 +30,12 @@ if (process.env.DATABASE_URL) {
       port: process.env.DB_PORT || 5432,
       dialect: "postgres",
       logging: false,
+      dialectOptions: useSSL ? {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false,
+        },
+      } : {},
       pool: { max: 5, min: 0, acquire: 30000, idle: 10000 },
     }
   );

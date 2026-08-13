@@ -41,7 +41,14 @@ const getAllBusinessesAdmin = async (req, res) => {
       const staffCount       = await Staff.count({ where: { business_id: b.id } });
       const serviceCount     = await Service.count({ where: { business_id: b.id } });
       const appointmentCount = await Appointment.count({ where: { business_id: b.id } });
-      return { ...b.toJSON(), staffCount, serviceCount, appointmentCount };
+      const adminUser        = await User.findOne({ where: { business_id: b.id, role: 'ADMIN' } });
+      return { 
+        ...b.toJSON(), 
+        staffCount, 
+        serviceCount, 
+        appointmentCount,
+        adminEmail: adminUser ? adminUser.email : ''
+      };
     }));
     return res.status(200).json(result);
   } catch (err) { console.error(err); return res.status(500).json({ message: 'Server error.' }); }
@@ -63,11 +70,44 @@ const createBusiness = async (req, res) => {
 
 const updateBusiness = async (req, res) => {
   try {
+    const { name, category, address, phone, description, speciality, currency, adminEmail, adminPassword } = req.body;
     const business = await Business.findByPk(req.params.id);
     if (!business) return res.status(404).json({ message: 'Business not found.' });
-    await business.update(req.body);
+    
+    await business.update({ name, category, address, phone, description, speciality, currency });
+    
+    if (adminEmail) {
+      const adminUser = await User.findOne({ where: { business_id: business.id, role: 'ADMIN' } });
+      if (adminUser) {
+        // If updating email, check if it's already taken by someone else
+        if (adminEmail !== adminUser.email) {
+          const taken = await User.findOne({ where: { email: adminEmail } });
+          if (taken) return res.status(409).json({ message: 'Admin email already exists.' });
+          adminUser.email = adminEmail;
+        }
+        if (adminPassword) {
+          adminUser.password = adminPassword;
+        }
+        await adminUser.save();
+      } else {
+        // Create new admin account for this business if none existed before
+        const taken = await User.findOne({ where: { email: adminEmail } });
+        if (taken) return res.status(409).json({ message: 'Admin email already exists.' });
+        await User.create({ 
+          email: adminEmail, 
+          password: adminPassword || 'admin123', 
+          role: 'ADMIN', 
+          business_id: business.id, 
+          is_verified: true 
+        });
+      }
+    }
+    
     return res.status(200).json(business);
-  } catch { return res.status(500).json({ message: 'Server error.' }); }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Server error.' });
+  }
 };
 
 const deleteBusiness = async (req, res) => {

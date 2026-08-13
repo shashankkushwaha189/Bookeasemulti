@@ -20,7 +20,11 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (data) => {
     const res = await authAPI.register(data);
-    return res.data; // Now returns { message, email } instead of token
+    const { token, user } = res.data;
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    setUser(user);
+    return user;
   };
 
   const verifyOtp = async (email, otp) => {

@@ -34,15 +34,16 @@ const start = async () => {
   try {
     await sequelize.authenticate();
     console.log('✅ Database connected.');
-    await sequelize.sync({ alter: true });
+    await sequelize.sync({ alter: process.env.DB_ALTER === 'true' });
     console.log('✅ Models synced.');
     
     // Auto-seed on first startup
     const { User } = require('./src/models');
-    const superAdmin = await User.findOne({ where: { email: 'superadmin@bookease.com' } });
+    const superAdmin = await User.findOne({ where: { role: 'SUPER_ADMIN' } });
     if (!superAdmin) {
       console.log('🌱 Running initial seed...');
-      require('./seed.js');
+      const seed = require('./seed.js');
+      await seed();
     }
     
     app.listen(PORT, () => console.log('🚀 BookEase API → http://localhost:' + PORT));
