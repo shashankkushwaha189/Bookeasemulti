@@ -5,7 +5,8 @@ const { User, Business } = require('./src/models');
 const seed = async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync({ alter: process.env.DB_ALTER === 'true' });
+    console.log('🔄 Dropping and recreating tables (force: true)...');
+    await sequelize.sync({ force: true });
     console.log('✅ Tables ready.');
 
     // Super Admin
